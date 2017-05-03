@@ -1,6 +1,7 @@
 ﻿# OBS!
-# Keys i denna hashtable måste vara utan space!
+# Keys (Test, prod, QA) i denna hashtable måste vara utan space!
 # De används för att skapa dynamisk parameter tab completion i cmdlets.
+# Att ange en miljö som "ett test" fungerar inte.
 $script:EnvironmentConfig = @{ Test = 'S:\1Driftdokumentation\BIF\Säkerhetstjänster\Konfiguration\Accessregler\test\BIF_test_customers_and_systems.conf';
                                Prod = 'S:\1Driftdokumentation\BIF\Säkerhetstjänster\Konfiguration\Accessregler\prod\BIF_prod_customers_and_systems.conf';
                                QA   = 'S:\1Driftdokumentation\BIF\Säkerhetstjänster\Konfiguration\Accessregler\qa\BIF_qa_customers_and_systems.conf';
@@ -34,6 +35,7 @@ Get-ChildItem function: | ? { $_.Name -like '*BIF*' -and $_.Name -notlike '_*' }
 $str = Get-ChildItem function: | ? { $_.ModuleName -eq "OLL.BIF.Utils"  -and $_.Name -notlike '_*' } | Select Name | Out-String -Width 50
 
 Write-Verbose "Följande funktioner för att hantera lokala säkerhetstjänster är nu tillgängliga i denna session: $str" -Verbose:$true
+Write-Verbose "För info om respektive kommando se, get-help <kommando>" -Verbose:$true
 
 # testa åtkomst till 
 $script:EnvironmentConfig.keys  | ForEach-Object {
