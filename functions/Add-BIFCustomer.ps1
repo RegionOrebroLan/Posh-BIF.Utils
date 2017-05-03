@@ -1,11 +1,21 @@
 ﻿<#
     .SYNOPSIS
+        Lägger till en kund till en viss miljö.
 
     .DESCRIPTION
+        Lägger till en kund till en viss miljö.
 
-    .PARAMETER xxxx
+    .PARAMETER CustomerName
+        Anger namnet på kunden som skall läggas till.
+
+    .PARAMETER Shortname
+        Anger ett "kortnamn" på kunden. Detta namn skall vara unikt och utan mellanslag. T.ex den gänse förkortningen på organisationen.
+
+    .PARAMETER Environment
+        Anger för vilken miljö kunden skall läggas till.
 
     .EXAMPLE
+        Add-BIFCustomer -CustomerName "Region Örebro län" 
 
     .NOTES
 
@@ -19,6 +29,7 @@ Function Add-BIFCustomer {
                   ,ValueFromPipelineByPropertyName=$True
         )]
         [string]$CustomerName,
+
         [Parameter(Mandatory=$True
                   ,ValueFromPipelineByPropertyName=$True
         )]

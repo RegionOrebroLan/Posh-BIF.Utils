@@ -1,11 +1,25 @@
 ﻿<#
     .SYNOPSIS
+        Lägger till ett system till en viss kund.
 
     .DESCRIPTION
+        Lägger till ett system till en viss kund.
 
-    .PARAMETER xxxx
+    .PARAMETER CustomerName
+        Anger för vilken kund systemet skall läggas till.
+
+    .PARAMETER SystemName
+        Anger namnet på systemet.
+
+    .PARAMETER SystemHSAId
+        Anger HSA-Id't på systemet.
+        Detta är HSA-Id på det certifikat som systemet använder för att autentisera sig mot lokala säkerhetstjänster.
+
+    .PARAMETER Environment
+        Anger för vilken miljö systemet skall läggas till.
 
     .EXAMPLE
+        Add-BIFSystem -CustomerName "Region Örebro län" -SystemName "Kibi" -SystemHSAId "SE162321000164-0175" -Environment Prod
 
     .NOTES
 

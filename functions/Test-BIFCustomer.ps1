@@ -1,15 +1,23 @@
 ﻿<#
     .SYNOPSIS
+        Kontrollerar om en viss kund finns registrerad.
 
     .DESCRIPTION
+        Kontrollerar om en viss kund finns registrerad.
 
-    .PARAMETER xxxx
+    .PARAMETER CustomerName
+        Anger vilken kund informationen skall hämtas för.
+
+    .PARAMETER Environment
+        Anger den driftmiljö som konfigurationen skall hämtas för.
 
     .EXAMPLE
+        Test-BIFCustomer -CustomerName "Region Örebro län" -Environment Prod
 
     .NOTES
 
     .LINK
+
 
 #>
 Function Test-BIFCustomer {

@@ -1,9 +1,19 @@
 ﻿<#
     .SYNOPSIS
+        Hämtar information om ett registrerat system som är kopplat till säkerhetstjänsterna.
 
     .DESCRIPTION
+        Hämtar information om ett registrerat system som är kopplat till säkerhetstjänsterna.
+        För att få upp vilka kunder som finns registrerade, använd cmdlet Get-BIFCustomer.
 
-    .PARAMETER xxxx
+    .PARAMETER CustomerName
+        Anger för vilken kund systemet tillhör.
+
+    .PARAMETER SystemName
+        Anger namn på systemet.
+
+    .PARAMETER Environment
+        Anger den driftmiljö som konfigurationen skall hämtas för.
 
     .EXAMPLE
 

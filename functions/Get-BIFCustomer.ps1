@@ -1,11 +1,22 @@
 ﻿<#
     .SYNOPSIS
+        Hämtar information om en registrerad kund i lokala säkerhetstjänsterna.
 
     .DESCRIPTION
+        Hämtar information om en registrerad kund i lokala säkerhetstjänsterna.
 
-    .PARAMETER xxxx
+    .PARAMETER CustomerName
+        Anger vilken kund information skall hämtas för.
+        Om denna parameter inte anges, hämtas information om alla kunder.
+
+    .PARAMETER Environment
+        Anger den driftmiljö som konfigurationen skall hämtas för.
 
     .EXAMPLE
+        Get-BIFCustomer -Environment Prod
+
+    .EXAMPLE
+        Get-BIFCustomer -CustomerName "Region Örebro län" -Environment Prod
 
     .NOTES
 

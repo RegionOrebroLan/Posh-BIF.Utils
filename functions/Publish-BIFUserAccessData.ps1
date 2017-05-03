@@ -1,11 +1,15 @@
 ﻿<#
     .SYNOPSIS
+        Skapar konfiguration för användar-access.
 
     .DESCRIPTION
+        Skapar konfiguration för användar-access för angiven miljö.
 
-    .PARAMETER xxxx
+    .PARAMETER Environment
+        Anger den driftmiljö som konfigurationen skall skapas för.
 
     .EXAMPLE
+        Publish-BIFUserAccessData -Environment Prod
 
     .NOTES
 

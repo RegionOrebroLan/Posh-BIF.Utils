@@ -1,11 +1,27 @@
 ﻿<#
     .SYNOPSIS
+        Lägger till en vårdgivare till en viss kund.
 
     .DESCRIPTION
+        Lägger till en vårdgivare till en viss kund.
 
-    .PARAMETER xxxx
+    .PARAMETER CustomerName
+        Anger för vilken kund vårdgivaren skall läggas upp.
+
+    .PARAMETER CareproviderName
+        Anger namnet på vårdgivaren.
+
+    .PARAMETER CareproviderHSAId
+        Anger HSA-Id för vårdgivaren.
+
+    .PARAMETER SystemHSAId
+        Om denna parameter anges läggs vårdigvaren endast till för ett visst system.
+
+    .PARAMETER Environment
+        Anger för vilken miljö vårdgivaren skall läggas till.
 
     .EXAMPLE
+        Add-BIFCareprovider -CustomerName "Region Örebro län" -CareproviderName "Region Örebro län" -CareproviderHSAId "SE2321000164-7381037590003" -Environment Test
 
     .NOTES
 
@@ -20,14 +36,17 @@ Function Add-BIFCareprovider {
                   ,ValueFromPipelineByPropertyName=$True
         )]
         [string]$CustomerName,
+
         [Parameter(Mandatory=$True
                   ,ValueFromPipelineByPropertyName=$True
         )]
         [string]$CareproviderName,
+
         [Parameter(Mandatory=$True
                   ,ValueFromPipelineByPropertyName=$True
         )]
         [string]$CareproviderHSAId,
+
         [Parameter(Mandatory=$False
                   ,ValueFromPipelineByPropertyName=$True
         )]

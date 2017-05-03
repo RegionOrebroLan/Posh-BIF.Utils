@@ -1,11 +1,21 @@
 ﻿<#
     .SYNOPSIS
+        Kontrollerar om ett visst system finns registerat för en viss kund.
 
     .DESCRIPTION
+        Kontrollerar om ett visst system finns registerat för en viss kund.
 
-    .PARAMETER xxxx
+    .PARAMETER CustomerName
+        Anger vilken kund informationen skall hämtas för.
+
+    .PARAMETER SystemName
+        Anger vilket system informationen skall hämtas för.
+
+    .PARAMETER Environment
+        Anger den driftmiljö som konfigurationen skall hämtas för.
 
     .EXAMPLE
+        Test-BIFSystem -CustomerName "Region Örebro län" -SystemName "Kibi" -Environment Prod
 
     .NOTES
 

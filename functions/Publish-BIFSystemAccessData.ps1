@@ -1,11 +1,30 @@
 ﻿<#
     .SYNOPSIS
+        Skapar konfiguration för systemaccess.
 
     .DESCRIPTION
+        Skapar konfiguration för systemaccess.
 
-    .PARAMETER xxxx
+    .PARAMETER CustomerName
+        Anger för vilken kund konfiguration skall skapas för.
+        Om inte denna parameter anges kommer konfiguration för alla kunder att skapas.
+
+    .PARAMETER SystemName
+        Anger för vilket system konfigurationen skall skapas för.
+        Om inte denna parameter anges kommer konfiguration för alla system att skapas.
+
+    .PARAMETER Environment
+        Anger den driftmiljö som konfigurationen skall skapas för.
 
     .EXAMPLE
+        Publish-BIFSystemAccessData -Environment Prod
+
+        Skapar om alla regler för systemaccess för alla system och kunder i driftmiljön Prod.
+
+    .EXAMPLE
+        Publish-BIFSystemAccessData -CustomerName "Region Örebro län" -Environment Test
+
+        Skapar om alla regler för systemaccess för alla system till kunden "Region Örebro län" i driftmiljön Test.
 
     .NOTES
 
