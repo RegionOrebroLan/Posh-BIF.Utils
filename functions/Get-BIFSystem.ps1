@@ -49,11 +49,18 @@ Function Get-BIFSystem {
     BEGIN {
         $Environment = $PSBoundParameters["Environment"].OriginalString
 
+
+
+        if(-Not $script:EnvironmentConfig) {
+            Throw "Global Environment config is not set! Is the module properly loaded?"
+        }
+        
         try {
-            [xml]$ConfigData = Get-Content $script:EnvironmentConfig[$Environment] -ErrorAction Stop
+            $EnvConfigFile = $script:EnvironmentConfig[$Environment]
+            [xml]$ConfigData = Get-Content $EnvConfigFile -ErrorAction Stop
         }
         catch {
-            Throw "Could not load configuration from `"$($script:EnvironmentConfig[$Environment])`". Make sure the file exists and your account has access to it."
+            Throw "Could not load configuration from `"$EnvConfigFile`". Make sure the file exists and your account has access to it, or that EnvironmentConfig is defined, is the module loaded properly?"
         }
     }
 

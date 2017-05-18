@@ -48,14 +48,22 @@ Function Add-BIFSystem {
     )
 
     BEGIN {
+        if(-Not $script:EnvironmentConfig) {
+            Throw "Global Environment config is not set! Is the module properly loaded?"
+        }
+        
         try {
-            [xml]$ConfigData = Get-Content $script:EnvironmentConfig[$Environment] -ErrorAction Stop
+            $EnvConfigFile = $script:EnvironmentConfig[$Environment]
+            [xml]$ConfigData = Get-Content $EnvConfigFile -ErrorAction Stop
         }
         catch {
-            Throw "Could not load configuration from `"$($script:EnvironmentConfig[$Environment])`". Make sure the file exists and your account has access to it."
+            Throw "Could not load configuration from `"$EnvConfigFile`". Make sure the file exists and your account has access to it, or that EnvironmentConfig is defined, is the module loaded properly?"
         }
 
-        _Backup-ConfigFile -FileName $script:EnvironmentConfig[$Environment]
+
+
+
+        _Backup-ConfigFile -FileName $EnvConfigFile
 
         # Get-BIFCustomer kan inte användas här eftersom det blir olika "dokumentkontext" på returnerad
         # data från Get-BIFCustomer och xml-noder skapade här.
@@ -102,6 +110,10 @@ Function Add-BIFSystem {
     }
 
     END {
-        $Configdata.save($script:EnvironmentConfig[$Environment])
+        if($EnvConfigFile) {
+            $Configdata.save($EnvConfigFile)
+        } else {
+            Throw "Can't save configuration! Which file to save to is not set!"
+        }
     }
 }

@@ -49,11 +49,11 @@ Function Get-BIFCustomer {
         }
         
         try {
-            $Env = $script:EnvironmentConfig[$Environment]
-            [xml]$ConfigData = Get-Content $Env -ErrorAction Stop
+            $EnvConfigFile = $script:EnvironmentConfig[$Environment]
+            [xml]$ConfigData = Get-Content $EnvConfigFile -ErrorAction Stop
         }
         catch {
-            Throw "Could not load configuration from `"$Env`". Make sure the file exists and your account has access to it, or that EnvironmentConfig is defined, is the module loaded properly?"
+            Throw "Could not load configuration from `"$EnvConfigFile`". Make sure the file exists and your account has access to it, or that EnvironmentConfig is defined, is the module loaded properly?"
         }
     }
 
