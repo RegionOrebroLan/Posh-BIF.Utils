@@ -5,7 +5,7 @@
 $script:EnvironmentConfig = @{ Test = 'S:\1Driftdokumentation\BIF\Säkerhetstjänster\Konfiguration\Accessregler\test\BIF_test_customers_and_systems.conf';
                                Prod = 'S:\1Driftdokumentation\BIF\Säkerhetstjänster\Konfiguration\Accessregler\prod\BIF_prod_customers_and_systems.conf';
                                QA   = 'S:\1Driftdokumentation\BIF\Säkerhetstjänster\Konfiguration\Accessregler\qa\BIF_qa_customers_and_systems.conf';
-                        }
+                             }
 
 
 # dot-source functions
@@ -56,4 +56,7 @@ $script:EnvironmentConfig.keys  | ForEach-Object {
     }
 
 }
+
+
+
 

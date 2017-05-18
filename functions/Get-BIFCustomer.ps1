@@ -24,33 +24,48 @@
 
 #>
 Function Get-BIFCustomer {
-    [cmdletBinding()]
+    [cmdletBinding(DefaultParameterSetName='CustomerName')]
     Param(
         [Parameter(Mandatory=$False
                   ,ValueFromPipelineByPropertyName=$True
+                  ,ParameterSetName="CustomerName"
         )]
-        [string]$CustomerName,
+        [string]$CustomerName
 
-        [Parameter(Mandatory=$True)]
+        ,[Parameter(Mandatory=$False
+                  ,ValueFromPipelineByPropertyName=$True
+                  ,ParameterSetName="ShortName"
+        )]
+        [string]$ShortName
+
+        ,[Parameter(Mandatory=$True)]
         [ValidateSet('Prod','Test','QA')]
         [string]$Environment
     )
 
     BEGIN {
+        if(-Not $script:EnvironmentConfig) {
+            Throw "Global Environment config is not set! Is the module properly loaded?"
+        }
+        
         try {
-            [xml]$ConfigData = Get-Content $script:EnvironmentConfig[$Environment] -ErrorAction Stop
+            $Env = $script:EnvironmentConfig[$Environment]
+            [xml]$ConfigData = Get-Content $Env -ErrorAction Stop
         }
         catch {
-            Throw "Could not load configuration from `"$($script:EnvironmentConfig[$Environment])`". Make sure the file exists and your account has access to it."
+            Throw "Could not load configuration from `"$Env`". Make sure the file exists and your account has access to it, or that EnvironmentConfig is defined, is the module loaded properly?"
         }
     }
 
     PROCESS {
-        if(-Not $CustomerName) {
-            $ConfigData.OLLBIF.Customers.Customer | select Name, ShortName
-        } else {
-            $ConfigData.OLLBIF.Customers.Customer | ? { $_.Name -eq $CustomerName }
-        }
+
+            if($CustomerName) {
+                $ConfigData.OLLBIF.Customers.Customer | ? { $_.Name -eq $CustomerName }
+            } elseif($ShortName) {
+                $ConfigData.OLLBIF.Customers.Customer | ? { $_.ShortName -eq $ShortName }
+            } else {
+                $ConfigData.OLLBIF.Customers.Customer | select Name, ShortName
+            }
     }
 
     END {
