@@ -7,7 +7,11 @@
 
     .PARAMETER CustomerName
         Anger vilken kund information skall hämtas för.
-        Om denna parameter inte anges, hämtas information om alla kunder.
+        Om inte ShortName eller denna parameter anges hämtas information om alla kunder.
+
+    .PARAMETER ShortName
+        Anger kort-namn på den kund som skall hämtas.
+        Om inte CustomerName eller denna parameter anges hämtas information om alla kunder.
 
     .PARAMETER Environment
         Anger den driftmiljö som konfigurationen skall hämtas för.
