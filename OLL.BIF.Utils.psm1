@@ -12,6 +12,7 @@ $script:EnvironmentConfig = @{ Test = 'S:\1Driftdokumentation\BIF\Säkerhetstjä
 
 # make sure helper functions are included first
 . ${PSScriptRoot}\functions\helpers\_OLL.BIF.Utils-dynamic-params_QuotedStringHelperClass.ps1
+. ${PSScriptRoot}\functions\helpers\_OLL.BIF.Utils-dynamic-params_Get-ObjectTypesForValidateSet.ps1
 . ${PSScriptRoot}\functions\helpers\_New-DynamicValidateSetParam.ps1
 . ${PSScriptRoot}\functions\helpers\_helper_functions.ps1
 
