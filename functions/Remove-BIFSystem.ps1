@@ -1,16 +1,25 @@
 ﻿<#
-	.SYNOPSIS        
+    .SYNOPSIS
+        Raderar ett system för en viss kund.
 
-	.DESCRIPTION        
+    .DESCRIPTION
+        Raderar ett system för en viss kund.
 
-    .PARAMETER         
+    .PARAMETER CustomerName
+        Anger för vilken kund systemet tillhör..
 
-	.EXAMPLE        
+    .PARAMETER SystemName
+        Anger namnet på systemet.
 
-	.NOTES
+    .PARAMETER Environment
+        Anger för vilken miljö systemet skall raderas från.
 
-	.LINK
+    .EXAMPLE
+        Remove-BIFSystem -CustomerName "Region Örebro län" -SystemName "Kibi" -Environment Prod
 
+    .NOTES
+
+    .LINK
 #>
 Function Remove-BIFSystem {
     [cmdletBinding()]
@@ -61,14 +70,42 @@ Function Remove-BIFSystem {
         }
 
 
+        _Backup-ConfigFile -FileName $EnvConfigFile
+
     }
 
     PROCESS {
 
         $System = Get-BIFSystem -CustomerName $CustomerName -SystemName $SystemName -Environment $Environment
 
+        if(-not $System) {
+            Throw "System $SystemName not found for customer $CustomerName in environment $Environment"
+        }
+
+
+        # lägg till support för -confirm / -force
+
+        # kolla om det är möjligt att select'a node case in-sensitive
+
+        # Hitta parent node
+        $ParentNode = $ConfigData.SelectSingleNode("/OLLBIF/Customers/Customer[@name='$($CustomerName)']/Systems")
+        if(-not $ParentNode) {
+            Throw "Weops! Could not find the Systems xml-node for customer $CustomerName`r`nCheck that the config file is valid and that names are specified case SENSITIVE!"
+        }
+
+        $node = $ConfigData.SelectSingleNode("/OLLBIF/Customers/Customer[@name='$($CustomerName)']/Systems/System[@name='$($SystemName)' and @hsaid='$($System.hsaid)']")
+        if(-not $node) {
+            Throw "Weops! Could not find the xml-node system $SystemName in the xml-file`r`nCheck that the config file is valid and that names are specified case SENSITIVE!"
+        }
+
+        $ParentNode.RemoveChild($node) | Out-Null
     }
 
     END {
+        if($EnvConfigFile) {
+            $Configdata.save($EnvConfigFile)
+        } else {
+            Throw "Can't save configuration! Which file to save to is not set!"
+        }
     }
 }

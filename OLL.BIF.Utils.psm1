@@ -62,7 +62,6 @@ $script:EnvironmentConfig.keys  | ForEach-Object {
             Write-Warning "You don't seem to have write access to configuration file `"$conf`". Check that the file exist and you have access rights to it."
         }    
     }
-
 }
 
 
