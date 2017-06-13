@@ -8,13 +8,19 @@ $script:EnvironmentConfig = @{ Test = 'S:\1Driftdokumentation\BIF\Säkerhetstjä
                              }
 
 
-# dot-source functions
+
+# Check if $PSScriptRoot is set. If not set then we might be running "interactivly", so set the module root to current location.
+if(-Not ${PSScriptRoot}) {
+    $ModuleRoot = (Get-Location).Path
+} else {
+    $ModuleRoot = ${PSScriptRoot}
+}
 
 # make sure helper functions are included first
-. ${PSScriptRoot}\functions\helpers\_OLL.BIF.Utils-dynamic-params_QuotedStringHelperClass.ps1
-. ${PSScriptRoot}\functions\helpers\_OLL.BIF.Utils-dynamic-params_Get-ObjectTypesForValidateSet.ps1
-. ${PSScriptRoot}\functions\helpers\_New-DynamicValidateSetParam.ps1
-. ${PSScriptRoot}\functions\helpers\_helper_functions.ps1
+. ${ModuleRoot}\functions\helpers\_OLL.BIF.Utils-dynamic-params_QuotedStringHelperClass.ps1
+. ${ModuleRoot}\functions\helpers\_OLL.BIF.Utils-dynamic-params_Get-ObjectTypesForValidateSet.ps1
+. ${ModuleRoot}\functions\helpers\_New-DynamicValidateSetParam.ps1
+. ${ModuleRoot}\functions\helpers\_helper_functions.ps1
 
 
 # dot-source cmdlet functions by listin all ps1-files in subfolder functions to where the module file is located
@@ -38,7 +44,8 @@ $str = Get-ChildItem function: | ? { $_.ModuleName -eq "OLL.BIF.Utils"  -and $_.
 Write-Verbose "Följande funktioner för att hantera lokala säkerhetstjänster är nu tillgängliga i denna session: $str" -Verbose:$true
 Write-Verbose "För info om respektive kommando se, get-help <kommando>" -Verbose:$true
 
-# testa åtkomst till 
+
+# testa åtkomst till konfigurationsfiler
 $script:EnvironmentConfig.keys  | ForEach-Object {
 
     $confname = $_
