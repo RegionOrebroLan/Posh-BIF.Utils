@@ -24,7 +24,7 @@ if(-Not ${PSScriptRoot}) {
 
 
 # dot-source cmdlet functions by listin all ps1-files in subfolder functions to where the module file is located
-dir ${PSScriptRoot}\functions\*.ps1 | Sort-Object Name | ? { $_.Name -notlike '_helper_functions*'} | ForEach-Object { . $_.FullName }
+dir ${ModuleRoot}\functions\*.ps1 | Sort-Object Name | ? { $_.Name -notlike '_helper_functions*'} | ForEach-Object { . $_.FullName }
 
 
 # make cmdlets available by exporting them.
