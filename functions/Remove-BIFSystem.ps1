@@ -22,7 +22,8 @@
     .LINK
 #>
 Function Remove-BIFSystem {
-    [cmdletBinding()]
+    [cmdletBinding(ConfirmImpact="High",
+                SupportsShouldProcess=$True)]
     Param(
         [Parameter(Mandatory=$True)]
         [string]$CustomerName,
@@ -72,6 +73,9 @@ Function Remove-BIFSystem {
 
         _Backup-ConfigFile -FileName $EnvConfigFile
 
+        # Flag to indicate if we should save
+        $DataModified = $False
+
     }
 
     PROCESS {
@@ -98,14 +102,22 @@ Function Remove-BIFSystem {
             Throw "Weops! Could not find the xml-node system $SystemName in the xml-file`r`nCheck that the config file is valid and that names are specified case SENSITIVE!"
         }
 
-        $ParentNode.RemoveChild($node) | Out-Null
+        if($PSCmdlet.ShouldProcess("$SystemName","Remove")) {
+            $ParentNode.RemoveChild($node) | Out-Null
+            $DataModified = $True  
+        } 
     }
 
     END {
-        if($EnvConfigFile) {
-            $Configdata.save($EnvConfigFile)
-        } else {
-            Throw "Can't save configuration! Which file to save to is not set!"
+        if($DataModified) {
+            if($EnvConfigFile) {
+                $Configdata.save($EnvConfigFile)
+
+                Write-Warning "Any generated configuration files for `"$SystemName`" must be removed manually!"
+
+            } else {
+                Throw "Can't save configuration! Which file to save to is not set!"
+            }
         }
     }
 }
