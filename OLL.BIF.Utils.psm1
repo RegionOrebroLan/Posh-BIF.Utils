@@ -1,4 +1,12 @@
-﻿# OBS!
+﻿# Check if $PSScriptRoot is set. If not set then we might be running "interactivly", so set the module root to current location.
+if(-Not ${PSScriptRoot}) {
+    $ModuleRoot = (Get-Location).Path
+} else {
+    $ModuleRoot = ${PSScriptRoot}
+}
+
+
+# OBS!
 # Keys (Test, prod, QA) i denna hashtable måste vara utan space!
 # De används för att skapa dynamisk parameter tab completion i cmdlets.
 # Att ange en miljö som "ett test" fungerar inte.
@@ -8,13 +16,10 @@ $script:EnvironmentConfig = @{ Test = 'S:\1Driftdokumentation\BIF\Säkerhetstjä
                              }
 
 
+# varna om det inte finns några inställningar!
 
-# Check if $PSScriptRoot is set. If not set then we might be running "interactivly", so set the module root to current location.
-if(-Not ${PSScriptRoot}) {
-    $ModuleRoot = (Get-Location).Path
-} else {
-    $ModuleRoot = ${PSScriptRoot}
-}
+
+
 
 # make sure helper functions are included first
 . ${ModuleRoot}\functions\helpers\_OLL.BIF.Utils-dynamic-params_QuotedStringHelperClass.ps1
