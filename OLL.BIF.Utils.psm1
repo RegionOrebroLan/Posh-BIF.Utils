@@ -23,7 +23,7 @@ if(-Not ${PSScriptRoot}) {
 . ${ModuleRoot}\functions\helpers\_helper_functions.ps1
 
 
-# dot-source cmdlet functions by listin all ps1-files in subfolder functions to where the module file is located
+# dot-source cmdlet functions by listing all ps1-files in subfolder functions to where the module file is located
 dir ${ModuleRoot}\functions\*.ps1 | Sort-Object Name | ? { $_.Name -notlike '_helper_functions*'} | ForEach-Object { . $_.FullName }
 
 
