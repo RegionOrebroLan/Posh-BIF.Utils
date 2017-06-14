@@ -43,7 +43,7 @@ Function Publish-BIFUserAccessData {
 
     $CustomerUserACLData = ""
 
-# Den här raden (en here-string) kan inte intenderas!
+# here strings can't be indented
 $CustomerUserACLDataTemplate = @"
 
 `t`t`t<!-- %CUSTOMERNAME%: %CAREPROVIDERNAME% -->
@@ -52,7 +52,7 @@ $CustomerUserACLDataTemplate = @"
 
     foreach($Customer in $ConfigData.OLLBIF.Customers.Customer) {
 
-        # kolla om kunden skall exkluderas via flaggan excludeFromUserACL
+        # check if the customer is to be excluded by flag excludeFromUserACL
         if(-Not $Customer.ExcludeFromUserACL) {
 
             foreach($Careprovider in $Customer.Careproviders.Careprovider) {
@@ -69,14 +69,14 @@ $CustomerUserACLDataTemplate = @"
             }
 
 
-            # De system som är definerade kan ha egna careproviders definerade.
-            # Här hade man inte behövt 2 loopar egentligen, utan det skulle gå att endast loopa $Customer.Systems.system.careproviders.careprovider
-            # för att få ut alla careproviders som sitter på alla underställda system till kunden.
-            # Men eftersom flaggan excludeFromUserACL skall kunna användas så blir koden enklare om system och dess underställda careproviders
-            # loopas ut var för sig.
+            # The defined systems can have their own care providers
+            # Two loops should not really be neccessary. It's probably possible to just loop $Customer.Systems.system.careproficers.careprovider
+            #   to get all careproviders that's attached to all underlying systems for a particular customer.
+            # But since the flag excludeFromUserACL might be used the code gets a little easier to read if each underlying care provider is looped 
+            # separately
             foreach($System in $Customer.Systems.system) {
                 
-                # kolla först så spec'ade careproviders inte skall exkluderas.
+                # check if specified care provider shall be included (not excluded)
                 if(-Not $System.careproviders.excludeFromUserACL -or $System.careproviders.excludeFromUserACL -eq 0) {
 
                     foreach($Careprovider in $System.Careproviders.careprovider) {
@@ -100,8 +100,7 @@ $CustomerUserACLDataTemplate = @"
         }
     }
     
-
-    # Skapa katalog där filerna kommer skrivas, samt backupkatalog
+    # create a directory to store the files to be written, together with a backup directory
     $OutputDirectory = "$(split-path -path $script:EnvironmentConfig[$Environment])\UserRules"
     _New-DirectoryWithTest -Name $OutputDirectory
 
@@ -112,9 +111,9 @@ $CustomerUserACLDataTemplate = @"
     $OutputFileName = "$($OutputDirectory)\regler_default_local_OLL-$($Configdata.OLLBIF.Environment.Name)-$($Configdata.OLLBIF.Environment.Version)_$($TS).xml"
 
 
-    # hämta upp mallen för användarregler.
-    # I mallen finns variabel %CAREGIVERXMLDATA% angiven där skapade reglerna som ligger i $CustomerUserACLData skall placeras.
-    # _Expand-VariablesInString  gör en replace på alla %CAREGIVERXMLDATA% till datat i $CustomerUserACLData 
+    # get the template for user rules.
+    # In the template, variable %CAREGIVERXMLDATA% must be defined where the created rules, stored in $CustomerUserACLData, should be inserted.
+    # _Expand-VariablesInString  does a replace on all %CAREGIVERXMLDATA% with the data in $CustomerUserACLData 
     Get-Content $ConfigData.OLLBIF.Environment.UserAccessTemplate -Encoding UTF8 -raw | `
          _Expand-VariablesInString -VariableMappings @{ CAREGIVERXMLDATA = $CustomerUserACLData } | `
          Out-File -FilePath $OutputFileName -Encoding utf8

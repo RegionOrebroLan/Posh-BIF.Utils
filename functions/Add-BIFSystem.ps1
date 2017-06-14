@@ -65,12 +65,13 @@ Function Add-BIFSystem {
 
         _Backup-ConfigFile -FileName $EnvConfigFile
 
-        # Get-BIFCustomer kan inte användas här eftersom det blir olika "dokumentkontext" på returnerad
-        # data från Get-BIFCustomer och xml-noder skapade här.
-        # Det finns sätt runt detta
+        # Get-BIFCustomer can not be used here because the data will be from a different "document context" in relation to xml nodes
+        # created here.
+        # There seems to be a way around that.
         # http://stackoverflow.com/questions/3019136/error-the-node-to-be-inserted-is-from-a-different-document-context
         #$CustomerConf = Get-BIFCustomer -CustomerName $CustomerName -Environment $Environment
-        # Istället plockar vi ut $CustomerConf från den ConfigData som har importerats i den här funktionen
+        #
+        # instead $CustomerConf is pulled from the xml config that is imported in this function
         $CustomerConf = $ConfigData.OLLBIF.Customers.Customer | ? { $_.name -eq $CustomerName }
 
         if(-Not $CustomerConf) {
@@ -78,7 +79,7 @@ Function Add-BIFSystem {
         }
 
         #$sys = $ConfigData.OLLBIF.Customers.customer.systems.system | ? { $_.hsaid -eq $SystemHSAId -or $_.name -eq $SystemName }
-        # Kolla endast HSA-id. System kan heta samma sakner mellan olika kunder, huvudsaken att HSA-id är unikt.
+        # Check that HSA id is unique. Systems can have the same name between customers, main thing used here is that HSA id is unique
         $sys = $ConfigData.OLLBIF.Customers.customer.systems.system | ? { $_.hsaid -eq $SystemHSAId }
         if($sys) {
             Throw "Another system with HSA-id $SystemHSAId already exists!"
@@ -92,8 +93,7 @@ Function Add-BIFSystem {
 
         if($CustomerConf.Systems) {
             try {
-                # out-null här eftersom AppendChild även returnerar datat som läggs till.
-                # Vi vill inte förorena pipelime med oavsiktlig output        
+                # out-null because AppendChild also returnes data and the pipeline should not be polluted.
                 $CustomerConf.Systems.AppendChild($NewSystem) | Out-Null
             }
             catch {
@@ -103,8 +103,7 @@ Function Add-BIFSystem {
             $SystemsNode = $ConfigData.CreateElement("Systems")
             $SystemsNode.AppendChild($NewSystem) | Out-Null
 
-            # out-null här eftersom AppendChild även returnerar datat som läggs till.
-            # Vi vill inte förorena pipelime med oavsiktlig output        
+            # out-null because AppendChild also returnes data and the pipeline should not be polluted.
             $CustomerConf.AppendChild($SystemsNode) | Out-Null
         }
     }

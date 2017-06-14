@@ -87,11 +87,12 @@ Function Remove-BIFSystem {
         }
 
 
-        # lägg till support för -confirm / -force
+        # TODO: add support for -confirm / -force
 
-        # kolla om det är möjligt att select'a node case in-sensitive
+        # TODO: Check if possible to select nodes case insensitive
+        #       Now the XPath selection is case sensitive
 
-        # Hitta parent node
+        # find the parent node
         $ParentNode = $ConfigData.SelectSingleNode("/OLLBIF/Customers/Customer[@name='$($CustomerName)']/Systems")
         if(-not $ParentNode) {
             Throw "Weops! Could not find the Systems xml-node for customer $CustomerName`r`nCheck that the config file is valid and that names are specified case SENSITIVE!"

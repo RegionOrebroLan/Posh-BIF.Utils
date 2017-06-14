@@ -17,6 +17,7 @@ Function Initialize-BIFSettings {
     Param(
         [Parameter(Mandatory=$True)]
         [hashtable]$ConfigReferences
+
         ,[Parameter(Mandatory=$True)]
         [ValidateSet('Profile','Current-Location','Module-Location')]
         [string]$Location

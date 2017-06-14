@@ -75,8 +75,7 @@ Function Publish-BIFSystemAccessData {
 
     $TS = (Get-date).ToSTring('yyyyMMdd-HHmmss')
 
-
-    # Skapa katalog där filerna kommer skrivas, samt backupkatalog
+    # create a directory to store the files, and a backup directory
     $OutputDirectory = "$(split-path -path $script:EnvironmentConfig[$Environment])\SystemRules"
     _New-DirectoryWithTest -Name $OutputDirectory
 
@@ -84,10 +83,10 @@ Function Publish-BIFSystemAccessData {
     _New-DirectoryWithTest -Name $BackupDirectory
 
 
-    # Accessfiler för system består av en lista med vårdgivare som ett visst system har åtkomst till.
-    # Detta är det xml-entry där varje system defineras med.
-    # %CAREPROVIDERNAME% byts till namnet på vårdgivaren
-    # %CAREPROVIDERHSAID% byts till hsa-id't på vårdgivaren
+    # Access files for systems consists of a list with care providers that a specific system has access to.
+    # This is the xml entry that each system is defined by.
+    # %CAREPROVIDERNAME% byts is replaced with the name of the care provider.
+    # %CAREPROVIDERHSAID% is replaced with the HSA id of the care giver.
 $SystemAccessEntryTemplate = @"
 `t`t`t<saml:Attribute Name="urn:sambi:names:attribute:careProviderHsaId">
 `t`t`t`t<!-- %CAREPROVIDERNAME% -->
@@ -96,16 +95,16 @@ $SystemAccessEntryTemplate = @"
 "@
 
 
-    # Om en specifik kund är angiven plocka ut den.
+    # if a specific customer is supplied, then get that.
     if($CustomerName) {
         $CustomerSelection = Get-BIFCustomer -CustomerName $CustomerName -Environment $Environment
     } else {
-        # om ingen kund är spec'ad, ta hela listan från conf.
+        # if no customer is specified, get all the customer from the config
         $CustomerSelection = $ConfigData.OLLBIF.Customers.Customer
     }
 
 
-    # loopa kunder i aktuell selection
+    # loop all customer in current selection
     foreach($Customer in $CustomerSelection) {
 
         If($SystemName) {
@@ -114,7 +113,7 @@ $SystemAccessEntryTemplate = @"
             $SystemSelection = $Customer.Systems.System 
         }
 
-        # loopa system i selection
+        # loop all systems in selection
         foreach($System in $SystemSelection) {   
 
             Write-Progress -Activity $Customer.name -CurrentOperation $System.name
@@ -122,25 +121,26 @@ $SystemAccessEntryTemplate = @"
             $SystemAccessData = Get-Content $ConfigData.OLLBIF.Environment.SystemAccessTemplate -encoding UTF8 -raw | _Expand-VariablesInString -VariableMappings @{ SYSTEMHSAID = $System.hsaid }
 
             $SystemData = ""
-            # loopa alla vårdgivare
+
+            # loop all care givers
             foreach($Careprovider in $Customer.Careproviders.Careprovider) {
             
-                # lägg till accessregel till $systemdata-strängen
+                # add an access rule to the $systemdata string
                 $SystemData += $SystemAccessEntryTemplate | _Expand-VariablesInString -VariableMappings @{ CAREPROVIDERNAME = $Careprovider.name; CAREPROVIDERHSAID = $Careprovider.hsaid }
                 $SystemData += "`r`n"
             }
 
        
-            # loopa alla eventuella vårdgivare specifikt för systemet
+            # If there's any care givers specific for the current system, then loop those
             foreach($Careprovider in $System.Careproviders.Careprovider) {
-            
-                # lägg till accessregel till $systemdata-strängen
+
+                # add an access rule to $systemdata
                 $SystemData += $SystemAccessEntryTemplate | _Expand-VariablesInString -VariableMappings @{ CAREPROVIDERNAME = $Careprovider.name; CAREPROVIDERHSAID = $Careprovider.hsaid }
                 $SystemData += "`r`n"
             }
         
 
-            # En replace görs av alla "farliga" tecken så att inte shortname innehåller något som kan traversera sökvägar.
+            # A replace is made of all "dangerous" characters so that the shortname can't traverse paths
             $OutputFileName = "$($OutputDirectory)\regler_$($Customer.shortname -replace "[/.\\:]","-")_vårdsystem_$($System.Name)_$($system.hsaid).xml"
 
             if( $(Test-Path $OutputFileName) ) {
@@ -149,7 +149,7 @@ $SystemAccessEntryTemplate = @"
             }
 
 
-            # skriv ut datat till fil.
+            # Write the data to a file
             $SystemAccessData | _Expand-VariablesInString -VariableMappings @{ SYSTEMACCESSENTRIES = $Systemdata } | `
                     Out-File -FilePath $OutputFileName -Encoding utf8
 

@@ -70,8 +70,8 @@ Function Add-BIFCustomer {
         $NewCustomer.SetAttribute("name",$CustomerName)
         $NewCustomer.SetAttribute("shortname",$Shortname)
 
-        # out-null här eftersom AppendChild även returnerar datat som läggs till.
-        # Vi vill inte förorena pipelime med oavsiktlig output
+        # using out-null here because AppendChild resturned the data that is added.
+        # We don't want to pollute the pipe 
         $Configdata.OLLBIF.Customers.AppendChild($NewCustomer) | Out-Null
 
     }

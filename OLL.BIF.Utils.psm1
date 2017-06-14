@@ -6,19 +6,22 @@ if(-Not ${PSScriptRoot}) {
 }
 
 
-# OBS!
-# Keys (Test, prod, QA) i denna hashtable måste vara utan space!
-# De används för att skapa dynamisk parameter tab completion i cmdlets.
-# Att ange en miljö som "ett test" fungerar inte.
+Write-host $($MyInvocation | out-string)
+
+Write-host $($MyInvocation.Line.GetType() | out-string)
+
+
+# !!
+# Keys in this hashtable must be without spaces!
+# They are used to create a dynamic parameter for tab completion in other functions.
+# A key with name "test env" does not work!
 $script:EnvironmentConfig = @{ Test = 'S:\1Driftdokumentation\BIF\Säkerhetstjänster\Konfiguration\Accessregler\test\BIF_test_customers_and_systems.conf';
                                Prod = 'S:\1Driftdokumentation\BIF\Säkerhetstjänster\Konfiguration\Accessregler\prod\BIF_prod_customers_and_systems.conf';
                                QA   = 'S:\1Driftdokumentation\BIF\Säkerhetstjänster\Konfiguration\Accessregler\qa\BIF_qa_customers_and_systems.conf';
                              }
 
 
-# varna om det inte finns några inställningar!
-
-
+# TODO: warn if there's not settings!
 
 
 # make sure helper functions are included first
@@ -30,27 +33,29 @@ $script:EnvironmentConfig = @{ Test = 'S:\1Driftdokumentation\BIF\Säkerhetstjä
 
 # dot-source cmdlet functions by listing all ps1-files in subfolder functions to where the module file is located
 dir ${ModuleRoot}\functions\*.ps1 | Sort-Object Name | ? { $_.Name -notlike '_helper_functions*'} | ForEach-Object { . $_.FullName }
+#write-host $(dir ${ModuleRoot}\functions\*.ps1 | Sort-Object Name | out-string)
 
 
 # make cmdlets available by exporting them.
-Get-ChildItem function: | ? { $_.Name -like '*BIF*' -and $_.Name -notlike '_*' } | Select Name | ForEach-Object { Export-ModuleMember -Function $_.Name }
-
+# This has been moved to the module manifest.
+#Get-ChildItem function: | ? { $_.Name -like '*BIF*' -and $_.Name -notlike '_*' } | Select Name | ForEach-Object { Export-ModuleMember -Function $_.Name }
 
 
 
 #################################################################################
 #
-# Visa information om importerade funktioner samt testa åtkomst till konfigfiler
-# Visa inte funktioner som börjar med "_". Dessa anses vara interna.
+# Write a message about imported functions
+# Don't show functions starting with "_". These are considered internal.
 #
-# Att behövs sätta width på Out-String för att få det se normalt ut är rätt hjärndött...
+# Should it really be neccessary to set width on Out-String to make it look good on terminal?
 $str = Get-ChildItem function: | ? { $_.ModuleName -eq "OLL.BIF.Utils"  -and $_.Name -notlike '_*' } | Select Name | Out-String -Width 50
 
-Write-Verbose "Följande funktioner för att hantera lokala säkerhetstjänster är nu tillgängliga i denna session: $str" -Verbose:$true
-Write-Verbose "För info om respektive kommando se, get-help <kommando>" -Verbose:$true
+
+Write-Verbose "The following function are not available in the current session: $str" -Verbose:$true
+Write-Verbose "For information about a specific function, see get-help <kommando>" -Verbose:$true
 
 
-# testa åtkomst till konfigurationsfiler
+# test access to configuration files
 $script:EnvironmentConfig.keys  | ForEach-Object {
 
     $confname = $_
@@ -68,7 +73,3 @@ $script:EnvironmentConfig.keys  | ForEach-Object {
         }    
     }
 }
-
-
-
-

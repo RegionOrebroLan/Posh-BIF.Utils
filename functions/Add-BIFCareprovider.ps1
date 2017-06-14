@@ -74,12 +74,13 @@ Function Add-BIFCareprovider {
         _Backup-ConfigFile -FileName $EnvConfigFile
 
 
-        # Get-BIFCustomer kan inte användas här eftersom det blir olika "dokumentkontext" på returnerad
-        # data från Get-BIFCustomer och xml-noder skapade här.
-        # Det finns sätt runt detta
+        # Get-BIFCustomer can not be used here because the data will be from a different "document context" in relation to xml nodes
+        # created here.
+        # There seems to be a way around that.
         # http://stackoverflow.com/questions/3019136/error-the-node-to-be-inserted-is-from-a-different-document-context
         #$CustomerConf = Get-BIFCustomer -CustomerName $CustomerName -Environment $Environment
-        # Istället plockar vi ut $CustomerConf från den ConfigData som har importerats i den här funktionen
+        #
+        # instead $CustomerConf is pulled from the xml config that is imported in this function
         $CustomerConf = $ConfigData.OLLBIF.Customers.Customer | ? { $_.name -eq $CustomerName }
 
         if(-Not $CustomerConf) {
@@ -88,11 +89,11 @@ Function Add-BIFCareprovider {
     }
 
     PROCESS {
-        # lagra $ConfirmPreference ifall det ställs om
+        # store $ConfirmPreference in case it's changed
         $oldconfpref = $ConfirmPreference
 
 
-        # Om $SystemHSAId är definierat så måste vi kolla om systemet finns på kunden
+        # If $SystemHSAId is defined we need to check if the system is already added to the customer
         if($SystemHSAId) {
             $System = $CustomerConf.Systems.system | ? { $_.hsaid -eq $SystemHSAId }
             if(-Not $System) {
@@ -113,7 +114,7 @@ Function Add-BIFCareprovider {
         $Newcareprovider.SetAttribute("name",$CareproviderName)
         $Newcareprovider.SetAttribute("hsaid",$CareproviderHSAId)
 
-        # Om $SystemHSAId är definierat så skall nya vårdgivaren läggas till ett specifikt system
+        # If $SystemHSAId is defined, then the new care gived should be added to a specific system
         if($SystemHSAId) {
             $ApplyToNode = $System
         } else {
@@ -122,8 +123,7 @@ Function Add-BIFCareprovider {
 
             if($ApplyToNode.Careproviders) {
                 try {
-                    # out-null här eftersom AppendChild även returnerar datat som läggs till.
-                    # Vi vill inte förorena pipelime med oavsiktlig output        
+                    # out-null because AppendChild also returnes data and the pipeline should not be polluted.
                     $ApplyToNode.Careproviders.AppendChild($Newcareprovider) | Out-Null
                 }
                 catch {
@@ -133,8 +133,7 @@ Function Add-BIFCareprovider {
                 $CareprovidersNode = $ConfigData.CreateElement("Careproviders")
                 $CareprovidersNode.AppendChild($Newcareprovider) | Out-Null
 
-                # out-null här eftersom AppendChild även returnerar datat som läggs till.
-                # Vi vill inte förorena pipelime med oavsiktlig output        
+                # out-null because AppendChild also returnes data and the pipeline should not be polluted.
                 $ApplyToNode.AppendChild($CareprovidersNode) | Out-Null
             }
        
