@@ -31,7 +31,7 @@ Function Update-BIFModuleManifest {
             Path = ''
 
             # Script module or binary module file associated with this manifest.
-            #RootModule = ''
+            RootModule = 'OLL.BIF.Utils.psm1'
 
             # Version number of this module.
             ModuleVersion = '1.0'
@@ -79,7 +79,7 @@ Function Update-BIFModuleManifest {
             # RequiredAssemblies = @()
 
             # Script files (.ps1) that are run in the caller's environment prior to importing this module.
-            ScriptsToProcess = @('Initialize-BIFModule.ps1')
+            ScriptsToProcess = @()
 
             # Type files (.ps1xml) to be loaded when importing this module
             # TypesToProcess = @()

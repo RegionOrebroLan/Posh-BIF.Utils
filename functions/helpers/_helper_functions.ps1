@@ -80,3 +80,47 @@ Function _Expand-VariablesInString {
     return $Inputstring
 }
 
+<#
+	.SYNOPSIS        
+
+	.DESCRIPTION        
+
+    .PARAMETER         
+
+	.EXAMPLE        
+
+	.NOTES
+
+	.LINK
+
+#>
+# https://stackoverflow.com/questions/9735449/how-to-verify-whether-the-share-has-write-access
+Function _Test-DirectoryWriteAccess {
+    [cmdletBinding()]
+    Param(
+        [Parameter(Mandatory=$True)]
+        [ValidateScript({[IO.Directory]::Exists($_.FullName)})]
+		[IO.DirectoryInfo]$Path
+
+    )
+
+	# If -debug is set, change $DebugPreference so that output is a little less annoying.
+	#	http://learn-powershell.net/2014/06/01/prevent-write-debug-from-bugging-you/
+	If ($PSBoundParameters['Debug']) {
+		$DebugPreference = 'Continue'
+	}
+
+
+  try {
+        $testPath = Join-Path $Path ([IO.Path]::GetRandomFileName())
+        Write-Debug "testpath: $testPath"
+        [IO.File]::Create($testPath, 1, 'DeleteOnClose') | Out-Null
+
+        return $true
+
+    } catch {
+        return $false
+    } finally {
+        Remove-Item $testPath -ErrorAction SilentlyContinue
+    }
+}
