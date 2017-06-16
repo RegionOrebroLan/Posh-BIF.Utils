@@ -5,19 +5,6 @@ if(-Not ${PSScriptRoot}) {
     $ModuleRoot = ${PSScriptRoot}
 }
 
-
-# !!
-# Keys in this hashtable must be without spaces!
-# They are used to create a dynamic parameter for tab completion in other functions.
-# A key with name "test env" does not work!
-<#
-$script:EnvironmentConfig = @{ Test = 'S:\1Driftdokumentation\BIF\Säkerhetstjänster\Konfiguration\Accessregler\test\BIF_test_customers_and_systems.conf';
-                               Prod = 'S:\1Driftdokumentation\BIF\Säkerhetstjänster\Konfiguration\Accessregler\prod\BIF_prod_customers_and_systems.conf';
-                               QA   = 'S:\1Driftdokumentation\BIF\Säkerhetstjänster\Konfiguration\Accessregler\qa\BIF_qa_customers_and_systems.conf';
-                             }
-#>
-
-
 # TODO: warn if there's not settings!
 
 
@@ -38,25 +25,7 @@ dir ${ModuleRoot}\functions\*.ps1 | Sort-Object Name | ? { $_.Name -notlike '_he
 #Get-ChildItem function: | ? { $_.Name -like '*BIF*' -and $_.Name -notlike '_*' } | Select Name | ForEach-Object { Export-ModuleMember -Function $_.Name }
 
 
-<#
-
-# config file 
-# 1. read from module root dir
-# 2. read from current dir
-if($(Test-Path -Path $(Join-Path -Path $ModuleRoot -ChildPath "OLL.BIF.Utils.conf") )) {
-
-    $script:EnvironmentConfig = Import-Clixml -Path $(Join-Path -Path $ModuleRoot -ChildPath "OLL.BIF.Utils.conf")
-
-} elseif($(Test-Path -Path $(Join-Path -Path (Get-location).Path -ChildPath "OLL.BIF.Utils.conf") )) {
-
-    $script:EnvironmentConfig = Import-Clixml -Path $(Join-Path -Path (Get-Location).Path -ChildPath "OLL.BIF.Utils.conf")
-
-} else {
-
-    Write-Warning "Can't find base config! Use Initialize-BIFSettings to create a base config and then use Use-BIFSettings to load the settings or reload the module."
-}
-#>
-
+# Read config
 Use-BIFSettings -Debug -verbose
 
 
