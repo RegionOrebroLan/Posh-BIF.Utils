@@ -25,11 +25,6 @@ dir ${ModuleRoot}\functions\*.ps1 | Sort-Object Name | ? { $_.Name -notlike '_he
 #Get-ChildItem function: | ? { $_.Name -like '*BIF*' -and $_.Name -notlike '_*' } | Select Name | ForEach-Object { Export-ModuleMember -Function $_.Name }
 
 
-# Read config
-Use-BIFSettings -Debug -verbose
-
-
-
 
 #################################################################################
 #
@@ -43,23 +38,6 @@ $str = Get-ChildItem function: | ? { $_.ModuleName -eq "OLL.BIF.Utils"  -and $_.
 Write-Verbose "The following functions are now available in the current session: $str" -Verbose:$true
 Write-Verbose "For information about a specific function, see get-help <command>" -Verbose:$true
 
-
-# test access to configuration files
-$script:EnvironmentConfig.keys  | ForEach-Object {
-
-    $confname = $_
-    $conf = $script:EnvironmentConfig[$confname]
-
-    if(-Not $(Test-Path -Path $conf) ) {
-        Write-Warning "Could not find configuration file `"$conf`". Check that the file exist and you have access rights to it."
-    } else {
-        # http://stackoverflow.com/questions/22943289/powershell-what-is-the-best-way-to-check-whether-the-current-user-has-permissio
-        try { 
-            [io.file]::OpenWrite($conf).close()
-        }
-        Catch { 
-            Write-Warning "You don't seem to have write access to configuration file `"$conf`". Check that the file exist and you have access rights to it."
-        }    
-    }
-}
+# Read config
+Use-BIFSettings -Debug -verbose
 
