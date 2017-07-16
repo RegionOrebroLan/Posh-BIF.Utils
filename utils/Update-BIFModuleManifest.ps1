@@ -34,7 +34,9 @@ Function Update-BIFModuleManifest {
             RootModule = 'OLL.BIF.Utils.psm1'
 
             # Version number of this module.
-            ModuleVersion = '1.0'
+            # NuGet does not like just 1.0, seems to need 1.0.0
+            # https://github.com/PowerShell/PowerShellGet/issues/88
+            ModuleVersion = '1.0.0'
 
             # Supported PSEditions
             # CompatiblePSEditions = @()
