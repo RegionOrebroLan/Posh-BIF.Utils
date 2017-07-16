@@ -52,7 +52,7 @@ Function Update-BIFModuleManifest {
             Copyright = ' '
 
             # Description of the functionality provided by this module
-            # Description = ''
+            Description = 'Simple module for managing configuration of Lokala sakerhetstjanster'
 
             # Minimum version of the Windows PowerShell engine required by this module
             # PowerShellVersion = ''
@@ -147,10 +147,9 @@ Function Update-BIFModuleManifest {
 
         New-ModuleManifest @ManifestParams
 
-
-
-
-
+        # work-around for git treating UTF-16 as binary
+        #$ManifestContent = Get-Content -Path $ManifestParams.Path
+        #$ManifestContent | Set-Content -Path $ManifestParams.Path -Encoding UTF8
     }
 
     PROCESS {
