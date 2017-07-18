@@ -55,7 +55,7 @@ Function Use-BIFSettings {
                         $conf = $script:EnvironmentConfig[$confname]
 
                         if(-Not $(Test-Path -Path $conf) ) {
-                            Write-Warning "Could not find configuration file `"{0}`". Check that the file exist and you have access rights to it." -f $conf
+                            Write-Warning ("Could not find configuration file `"{0}`". Check that the file exist and you have access rights to it." -f $conf)
                         } else {
                             # http://stackoverflow.com/questions/22943289/powershell-what-is-the-best-way-to-check-whether-the-current-user-has-permissio
                             try { 
@@ -69,7 +69,7 @@ Function Use-BIFSettings {
                 }
             }
             catch {
-                Write-Warning "Unable to load base configuration from $ConfigStoragePath`r`n{0}" -f $($_.Exception.Message)
+                Write-Warning ("Unable to load base configuration from $ConfigStoragePath`r`n{0}" -f $($_.Exception.Message))
             }
         } else {
             Write-Warning "Can't find base config! Use Initialize-BIFSettings to create a base config and then use Use-BIFSettings to load the settings or reload the module."        
