@@ -42,10 +42,20 @@ Function Get-BIFCustomer {
         )]
         [string]$ShortName
 
-        ,[Parameter(Mandatory=$True)]
+        <#
+        [Parameter(Mandatory=$True)]
         [ValidateSet('Prod','Test','QA')]
         [string]$Environment
+        #>
     )
+    DynamicParam {
+        $RuntimeParameterDictionary = _New-DynamicValidateSetParam -ParameterName "Environment" `
+                                                                   -ParameterType [DynParamQuotedString] `
+                                                                   -Mandatory $True `
+                                                                   -FillValuesWith "_OLL.BIF.Utils-dynamic-params_Get-EnvironmentShortNames" 
+
+        return $RuntimeParameterDictionary
+    }
 
     BEGIN {
         if(-Not $script:EnvironmentConfig) {
