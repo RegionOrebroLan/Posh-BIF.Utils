@@ -28,15 +28,15 @@ Function Add-BIFCustomer {
         [Parameter(Mandatory=$True
                   ,ValueFromPipelineByPropertyName=$True
         )]
-        [string]$CustomerName,
+        [string]$CustomerName
 
-        [Parameter(Mandatory=$True
+        ,[Parameter(Mandatory=$True
                   ,ValueFromPipelineByPropertyName=$True
         )]
-        [string]$Shortname,
+        [string]$Shortname
 
         <#
-        [Parameter(Mandatory=$True)]
+        ,[Parameter(Mandatory=$True)]
         [ValidateSet('Prod','Test','QA')]
         [string]$Environment
         #>

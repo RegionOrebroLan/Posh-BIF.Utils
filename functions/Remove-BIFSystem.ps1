@@ -26,13 +26,13 @@ Function Remove-BIFSystem {
                 SupportsShouldProcess=$True)]
     Param(
         [Parameter(Mandatory=$True)]
-        [string]$CustomerName,
+        [string]$CustomerName
 
-        [Parameter(Mandatory=$False)]
+        ,[Parameter(Mandatory=$False)]
         [string]$SystemName
 
         <#
-        [Parameter(Mandatory=$True)]
+        ,[Parameter(Mandatory=$True)]
         [ValidateSet('Prod','Test','QA')]
         [string]$Environment
         #>        

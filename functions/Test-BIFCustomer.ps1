@@ -24,10 +24,10 @@ Function Test-BIFCustomer {
     [cmdletBinding()]
     Param(
         [Parameter(Mandatory=$True)]
-        [string]$CustomerName,
+        [string]$CustomerName
 
         <#
-        [Parameter(Mandatory=$True)]
+        ,[Parameter(Mandatory=$True)]
         [ValidateSet('Prod','Test','QA')]
         [string]$Environment
         #>

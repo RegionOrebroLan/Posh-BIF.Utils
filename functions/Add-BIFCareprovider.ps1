@@ -35,25 +35,25 @@ Function Add-BIFCareprovider {
         [Parameter(Mandatory=$True
                   ,ValueFromPipelineByPropertyName=$True
         )]
-        [string]$CustomerName,
+        [string]$CustomerName
 
-        [Parameter(Mandatory=$True
+        ,[Parameter(Mandatory=$True
                   ,ValueFromPipelineByPropertyName=$True
         )]
-        [string]$CareproviderName,
+        [string]$CareproviderName
 
-        [Parameter(Mandatory=$True
+        ,[Parameter(Mandatory=$True
                   ,ValueFromPipelineByPropertyName=$True
         )]
-        [string]$CareproviderHSAId,
+        [string]$CareproviderHSAId
 
-        [Parameter(Mandatory=$False
+        ,[Parameter(Mandatory=$False
                   ,ValueFromPipelineByPropertyName=$True
         )]
-        [string]$SystemHSAId,
+        [string]$SystemHSAId
 
         <#
-        [Parameter(Mandatory=$True)]
+        ,[Parameter(Mandatory=$True)]
         [ValidateSet('Prod','Test','QA')]
         [string]$Environment
         #>

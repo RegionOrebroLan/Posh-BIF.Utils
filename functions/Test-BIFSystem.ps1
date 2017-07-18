@@ -26,13 +26,13 @@ Function Test-BIFSystem {
     [cmdletBinding()]
     Param(
         [Parameter(Mandatory=$True)]
-        [string]$CustomerName,
+        [string]$CustomerName
 
-        [Parameter(Mandatory=$True)]
-        [string]$SystemName,
+        ,[Parameter(Mandatory=$True)]
+        [string]$SystemName
 
         <#
-        [Parameter(Mandatory=$True)]
+        ,[Parameter(Mandatory=$True)]
         [ValidateSet('Prod','Test','QA')]
         [string]$Environment
         #>

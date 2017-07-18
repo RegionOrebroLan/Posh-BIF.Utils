@@ -35,13 +35,13 @@ Function Publish-BIFSystemAccessData {
     [cmdletBinding()]
     Param(
         [Parameter(Mandatory=$False)]
-        [string]$CustomerName,
+        [string]$CustomerName
 
-        [Parameter(Mandatory=$False)]
-        [string]$SystemName,
+        ,[Parameter(Mandatory=$False)]
+        [string]$SystemName
 
         <#
-        [Parameter(Mandatory=$True)]
+        ,[Parameter(Mandatory=$True)]
         [ValidateSet('Prod','Test','QA')]
         [string]$Environment
         #>

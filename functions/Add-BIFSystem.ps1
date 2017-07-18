@@ -32,18 +32,20 @@ Function Add-BIFSystem {
         [Parameter(Mandatory=$True
                   ,ValueFromPipelineByPropertyName=$True
         )]
-        [string]$CustomerName,
-        [Parameter(Mandatory=$True
+        [string]$CustomerName
+
+        ,[Parameter(Mandatory=$True
                   ,ValueFromPipelineByPropertyName=$True
         )]
         [string]$SystemName,
-        [Parameter(Mandatory=$True
+
+        ,[Parameter(Mandatory=$True
                   ,ValueFromPipelineByPropertyName=$True
         )]
-        [string]$SystemHSAId,
+        [string]$SystemHSAId
 
         <#
-        [Parameter(Mandatory=$True)]
+        ,[Parameter(Mandatory=$True)]
         [ValidateSet('Prod','Test','QA')]
         [string]$Environment
         #>
