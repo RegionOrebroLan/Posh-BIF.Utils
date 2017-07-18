@@ -26,13 +26,13 @@ Function Get-BIFSystem {
     [cmdletBinding()]
     Param(
         [Parameter(Mandatory=$True)]
-        [string]$CustomerName,
+        [string]$CustomerName
 
-        [Parameter(Mandatory=$False)]
+        ,[Parameter(Mandatory=$False)]
         [string]$SystemName
 
         <#
-        [Parameter(Mandatory=$True)]
+        ,[Parameter(Mandatory=$True)]
         [ValidateSet('Prod','Test','QA')]
         [string]$Environment
         #>
@@ -47,13 +47,11 @@ Function Get-BIFSystem {
     }
 
     BEGIN {
-        $Environment = $PSBoundParameters["Environment"].OriginalString
-
-
-
         if(-Not $script:EnvironmentConfig) {
-            Throw "Global Environment config is not set! Is the module properly loaded?"
+            Throw "Global Environment config is not set! Is the module properly loaded? use Use-BIFSettings to re-read configuration data."
         }
+
+        $Environment = $PSBoundParameters["Environment"].OriginalString
         
         try {
             $EnvConfigFile = $script:EnvironmentConfig[$Environment]

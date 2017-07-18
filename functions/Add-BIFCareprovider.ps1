@@ -35,32 +35,44 @@ Function Add-BIFCareprovider {
         [Parameter(Mandatory=$True
                   ,ValueFromPipelineByPropertyName=$True
         )]
-        [string]$CustomerName,
+        [string]$CustomerName
 
-        [Parameter(Mandatory=$True
+        ,[Parameter(Mandatory=$True
                   ,ValueFromPipelineByPropertyName=$True
         )]
-        [string]$CareproviderName,
+        [string]$CareproviderName
 
-        [Parameter(Mandatory=$True
+        ,[Parameter(Mandatory=$True
                   ,ValueFromPipelineByPropertyName=$True
         )]
-        [string]$CareproviderHSAId,
+        [string]$CareproviderHSAId
 
-        [Parameter(Mandatory=$False
+        ,[Parameter(Mandatory=$False
                   ,ValueFromPipelineByPropertyName=$True
         )]
-        [string]$SystemHSAId,
+        [string]$SystemHSAId
 
-        [Parameter(Mandatory=$True)]
+        <#
+        ,[Parameter(Mandatory=$True)]
         [ValidateSet('Prod','Test','QA')]
         [string]$Environment
+        #>
     )
+    DynamicParam {
+        $RuntimeParameterDictionary = _New-DynamicValidateSetParam -ParameterName "Environment" `
+                                                                   -ParameterType [DynParamQuotedString] `
+                                                                   -Mandatory $True `
+                                                                   -FillValuesWith "_OLL.BIF.Utils-dynamic-params_Get-EnvironmentShortNames" 
+
+        return $RuntimeParameterDictionary
+    }
 
     BEGIN {
         if(-Not $script:EnvironmentConfig) {
-            Throw "Global Environment config is not set! Is the module properly loaded?"
+            Throw "Global Environment config is not set! Is the module properly loaded? use Use-BIFSettings to re-read configuration data."
         }
+
+        $Environment = $PSBoundParameters["Environment"].OriginalString
         
         try {
             $EnvConfigFile = $script:EnvironmentConfig[$Environment]
