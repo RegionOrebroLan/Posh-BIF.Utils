@@ -57,7 +57,6 @@ Function Remove-BIFSystem {
         $Environment = $PSBoundParameters["Environment"].OriginalString
 
 
-
         if(-Not $script:EnvironmentConfig) {
             Throw "Global Environment config is not set! Is the module properly loaded?"
         }

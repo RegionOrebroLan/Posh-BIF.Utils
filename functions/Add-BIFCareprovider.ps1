@@ -69,8 +69,10 @@ Function Add-BIFCareprovider {
 
     BEGIN {
         if(-Not $script:EnvironmentConfig) {
-            Throw "Global Environment config is not set! Is the module properly loaded?"
+            Throw "Global Environment config is not set! Is the module properly loaded? use Use-BIFSettings to re-read configuration data."
         }
+
+        $Environment = $PSBoundParameters["Environment"].OriginalString
         
         try {
             $EnvConfigFile = $script:EnvironmentConfig[$Environment]

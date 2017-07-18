@@ -13,6 +13,8 @@
 
     .PARAMETER Location
         Anger vart denna konfiguration, som pekar ut miljökonfigurationerna, skall sparas.
+        Current-Location: Sparar till aktuell sökväg.
+        Module-Location: Sparar till modulens sökväg (standard).
 
 	.EXAMPLE
         Initialize-BIFSettings -ConfigReferences @{ Prod = "\\fileserver\share$\BIF\config\production\BIF_production.conf"; Test = "\\fileserver\share$\BIF\config\test\BIF_production.conf";}
