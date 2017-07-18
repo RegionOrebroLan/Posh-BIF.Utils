@@ -1,16 +1,25 @@
 ﻿<#
 	.SYNOPSIS        
+        Läser in konfigurationsdata.
 
 	.DESCRIPTION        
 
-    .PARAMETER         
+    .PARAMETER Path
+        Anger en sökväg till konfigurationsfilen
 
 	.EXAMPLE        
+        Use-BIFSettings
+
+        Läser in konfigurationsdata från standardsökvägen
+
+	.EXAMPLE        
+        Use-BIFSettings -Path \\fileserver\share$\BIF\
+
+        Läser in konfigurationsdata från konfigurationsfil lagrad i \\fileserver\share$\BIF\
 
 	.NOTES
 
 	.LINK
-
 #>
 Function Use-BIFSettings {
     [cmdletBinding()]
@@ -44,6 +53,8 @@ Function Use-BIFSettings {
 
         if($(Test-Path -Path $ConfigStoragePath)) {
             
+            Write-Verbose "Reading config data from $ConfigStoragePath"
+
             try {
                 $script:EnvironmentConfig = Import-Clixml -Path $ConfigStoragePath -ErrorAction stop
 
