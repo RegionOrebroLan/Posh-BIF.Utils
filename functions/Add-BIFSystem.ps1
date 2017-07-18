@@ -37,7 +37,7 @@ Function Add-BIFSystem {
         ,[Parameter(Mandatory=$True
                   ,ValueFromPipelineByPropertyName=$True
         )]
-        [string]$SystemName,
+        [string]$SystemName
 
         ,[Parameter(Mandatory=$True
                   ,ValueFromPipelineByPropertyName=$True
