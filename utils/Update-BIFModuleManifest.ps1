@@ -28,7 +28,7 @@ Function Update-BIFModuleManifest {
             Path = ''
 
             # Script module or binary module file associated with this manifest.
-            RootModule = 'Posh-BIF-Utils.psm1'
+            RootModule = 'Posh-BIF.Utils.psm1'
 
             # Version number of this module.
             # NuGet does not like just 1.0, seems to need 1.0.0
