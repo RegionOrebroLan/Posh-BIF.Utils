@@ -32,7 +32,7 @@ dir ${ModuleRoot}\functions\*.ps1 | Sort-Object Name | ? { $_.Name -notlike '_he
 # Don't show functions starting with "_". These are considered internal.
 #
 # Should it really be neccessary to set width on Out-String to make it look good on terminal?
-$str = Get-ChildItem function: | ? { $_.ModuleName -eq "OLL.BIF.Utils"  -and $_.Name -notlike '_*' } | Select Name | Out-String -Width 50
+$str = Get-ChildItem function: | ? { $_.ModuleName -eq "Posh-BIF.Utils"  -and $_.Name -notlike '_*' } | Select Name | Out-String -Width 50
 
 
 Write-Verbose "The following functions are now available in the current session: $str" -Verbose:$true
@@ -40,4 +40,3 @@ Write-Verbose "For information about a specific function, see get-help <command>
 
 # Read config
 Use-BIFSettings -Debug -verbose
-

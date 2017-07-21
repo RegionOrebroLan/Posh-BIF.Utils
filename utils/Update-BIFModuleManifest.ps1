@@ -1,11 +1,9 @@
 ﻿<#
-	.SYNOPSIS        
+	.SYNOPSIS
 
-	.DESCRIPTION        
+	.DESCRIPTION
 
-    .PARAMETER         
-
-	.EXAMPLE        
+	.EXAMPLE
 
 	.NOTES
 
@@ -15,7 +13,6 @@
 Function Update-BIFModuleManifest {
     [cmdletBinding()]
     Param(
-        
     )
 
     BEGIN {
@@ -31,7 +28,7 @@ Function Update-BIFModuleManifest {
             Path = ''
 
             # Script module or binary module file associated with this manifest.
-            RootModule = 'OLL.BIF.Utils.psm1'
+            RootModule = 'Posh-BIF-Utils.psm1'
 
             # Version number of this module.
             # NuGet does not like just 1.0, seems to need 1.0.0
@@ -130,6 +127,8 @@ Function Update-BIFModuleManifest {
             $ModuleRoot = Split-Path -path ${PSScriptRoot} -Parent
         }
 
+        Write-Debug "Path: $ModuleRoot"
+
         # Do some sanity testing
         $FunctionsDir = get-item -Path (join-path -Path $ModuleRoot -ChildPath "functions")
         if( (-Not $FunctionsDir) -or (-Not $FunctionsDir.PSIsContainer) ) {
@@ -137,7 +136,7 @@ Function Update-BIFModuleManifest {
         }
 
 
-        $ManifestParams.Path = $(Join-Path -Path $ModuleRoot -ChildPath "OLL.BIF.Utils.psd1" )
+        $ManifestParams.Path = $(Join-Path -Path $ModuleRoot -ChildPath "Posh-BIF.Utils.psd1" )
 
         # There is probably a better way to do this...
         $Functions = get-childitem "${ModuleRoot}\functions\*.ps1" | ? { $_.Name -like '*-BIF*.ps1'} | ForEach-Object { $_.Name.Replace(".ps1","") }
@@ -147,8 +146,8 @@ Function Update-BIFModuleManifest {
         New-ModuleManifest @ManifestParams
 
         # work-around for git treating UTF-16 as binary
-        #$ManifestContent = Get-Content -Path $ManifestParams.Path
-        #$ManifestContent | Set-Content -Path $ManifestParams.Path -Encoding UTF8
+        $ManifestContent = Get-Content -Path $ManifestParams.Path
+        $ManifestContent | Set-Content -Path $ManifestParams.Path -Encoding UTF8
     }
 
     PROCESS {
@@ -161,4 +160,3 @@ Function Update-BIFModuleManifest {
 
 
 Update-BIFModuleManifest
-
