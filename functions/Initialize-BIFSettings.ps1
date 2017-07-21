@@ -36,7 +36,7 @@ Function Initialize-BIFSettings {
         #,[Parameter(Mandatory=$False)]
         #[System.IO.Path]$Path
     )
-    
+
     # Generated with New-FortikaPSFunction
 
     BEGIN {
@@ -55,7 +55,7 @@ Vårdgivare kan spec'as specifikt för ett visst system.
 <System name="" hsaid="">
 	<Careproviders>
 		<Careprovider name="" hsaid="" />
-	</Careproviders>				
+	</Careproviders>
 </System>
 
 -->
@@ -84,15 +84,15 @@ Vårdgivare kan spec'as specifikt för ett visst system.
 		</Customer>
 		-->
   </Customers>
-</OLLBIF>        
+</OLLBIF>
 '@
 
 
         $SystemACLTemplate=@'
 <?xml version='1.0' encoding='UTF-8'?>
-<md:EntityDescriptor xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol" 
-xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" 
-xmlns:ds="http://www.w3.org/2000/09/xmldsig#" entityID="%SYSTEMHSAID%" 
+<md:EntityDescriptor xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol"
+xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion"
+xmlns:ds="http://www.w3.org/2000/09/xmldsig#" entityID="%SYSTEMHSAID%"
 xmlns:mdattr="urn:oasis:names:tc:SAML:metadata:attribute">
 	<md:Extensions>
 		<mdattr:EntityAttributes>
@@ -103,8 +103,8 @@ xmlns:mdattr="urn:oasis:names:tc:SAML:metadata:attribute">
 		</mdattr:EntityAttributes>
 	</md:Extensions>
 	<md:SPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
-		<md:AssertionConsumerService 
-		Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://dummy/HTTP-POST" 
+		<md:AssertionConsumerService
+		Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://dummy/HTTP-POST"
 		index="1" isDefault="true" />
 	</md:SPSSODescriptor>
 </md:EntityDescriptor>
@@ -115,7 +115,7 @@ xmlns:mdattr="urn:oasis:names:tc:SAML:metadata:attribute">
 <resources>
 
    <!-- ================== S A M T Y C K E ================== -->
-   
+
    <resource id="urn:sambi:names:resource:consent:gui">
       <action id="read">
 		 <condition name="urn:sambi:names:attribute:commissionPurpose" value="Vård och behandling"/>
@@ -140,7 +140,7 @@ xmlns:mdattr="urn:oasis:names:tc:SAML:metadata:attribute">
          %CAREGIVERXMLDATA%
       </action>
    </resource>
-   
+
    <resource id="urn:sambi:names:resource:consent">
       <action id="read">
 		 <condition name="urn:sambi:names:attribute:commissionPurpose" value="Vård och behandling"/>
@@ -181,7 +181,7 @@ xmlns:mdattr="urn:oasis:names:tc:SAML:metadata:attribute">
          <condition name="urn:sambi:names:attribute:systemRole" value="System"/>
          %CAREGIVERXMLDATA%
       </action>
-      
+
       <action id="read">
          <condition name="urn:sambi:names:attribute:systemRole" value="TP"/>
       </action>
@@ -208,7 +208,7 @@ xmlns:mdattr="urn:oasis:names:tc:SAML:metadata:attribute">
          <attribute name="urn:sambi:names:attribute:commissionPurpose" value="Administration"/>
          <attribute name="urn:sambi:names:attribute:commissionPurpose" value="Tillsyn och utvärdering"/>
          %CAREGIVERXMLDATA%
-      </action>	  
+      </action>
       <action id="add">
          <attribute name="urn:sambi:names:attribute:commissionPurpose" value="Vård och behandling"/>
          %CAREGIVERXMLDATA%
@@ -233,7 +233,7 @@ xmlns:mdattr="urn:oasis:names:tc:SAML:metadata:attribute">
          <attribute name="urn:sambi:names:attribute:commissionPurpose" value="Administration"/>
          <attribute name="urn:sambi:names:attribute:commissionPurpose" value="Tillsyn och utvärdering"/>
          %CAREGIVERXMLDATA%
-      </action>	  
+      </action>
       <action id="add">
          <attribute name="urn:sambi:names:attribute:commissionPurpose" value="Vård och behandling"/>
          %CAREGIVERXMLDATA%
@@ -246,7 +246,7 @@ xmlns:mdattr="urn:oasis:names:tc:SAML:metadata:attribute">
          <attribute name="urn:sambi:names:attribute:commissionPurpose" value="Vård och behandling"/>
          %CAREGIVERXMLDATA%
       </action>
-      
+
       <action id="read">
          <condition name="urn:sambi:names:attribute:systemRole" value="System"/>
          %CAREGIVERXMLDATA%
@@ -263,7 +263,7 @@ xmlns:mdattr="urn:oasis:names:tc:SAML:metadata:attribute">
          <condition name="urn:sambi:names:attribute:systemRole" value="System"/>
          %CAREGIVERXMLDATA%
       </action>
-      
+
       <action id="read">
          <condition name="urn:sambi:names:attribute:systemRole" value="TP"/>
       </action>
@@ -275,10 +275,10 @@ xmlns:mdattr="urn:oasis:names:tc:SAML:metadata:attribute">
       </action>
       <action id="delete">
          <condition name="urn:sambi:names:attribute:systemRole" value="TP"/>
-      </action>      
+      </action>
    </resource>
 
-   
+
    <!-- ================== S P Ä R R ================== -->
 
    <resource id="urn:sambi:names:resource:block:gui">
@@ -350,7 +350,7 @@ xmlns:mdattr="urn:oasis:names:tc:SAML:metadata:attribute">
          <condition name="urn:sambi:names:attribute:systemRole" value="System"/>
          %CAREGIVERXMLDATA%
       </action>
-      
+
       <action id="read">
          <condition name="urn:sambi:names:attribute:systemRole" value="TP"/>
       </action>
@@ -362,7 +362,7 @@ xmlns:mdattr="urn:oasis:names:tc:SAML:metadata:attribute">
       </action>
       <action id="delete">
          <condition name="urn:sambi:names:attribute:systemRole" value="TP"/>
-      </action>      
+      </action>
    </resource>
 
    <resource id="urn:sambi:names:resource:block:temprevoke">
@@ -407,7 +407,7 @@ xmlns:mdattr="urn:oasis:names:tc:SAML:metadata:attribute">
          <condition name="urn:sambi:names:attribute:systemRole" value="System"/>
          %CAREGIVERXMLDATA%
       </action>
-      
+
       <action id="read">
          <condition name="urn:sambi:names:attribute:systemRole" value="TP"/>
       </action>
@@ -419,7 +419,7 @@ xmlns:mdattr="urn:oasis:names:tc:SAML:metadata:attribute">
       </action>
       <action id="delete">
          <condition name="urn:sambi:names:attribute:systemRole" value="TP"/>
-      </action>      
+      </action>
    </resource>
 
 
@@ -433,7 +433,7 @@ xmlns:mdattr="urn:oasis:names:tc:SAML:metadata:attribute">
          %CAREGIVERXMLDATA%
       </action>
    </resource>
-   
+
 
    <!-- ================== L O G ================== -->
 
@@ -444,36 +444,36 @@ xmlns:mdattr="urn:oasis:names:tc:SAML:metadata:attribute">
       <action id="add">
          <condition name="urn:sambi:names:attribute:systemRole" value="System"/>
          %CAREGIVERXMLDATA%
-      </action> 
+      </action>
       <action id="read">
             <condition name="urn:sambi:names:attribute:systemRole" value="System"/>
             %CAREGIVERXMLDATA%
         </action>
         <action id="read">
             <condition name="urn:sambi:names:attribute:systemRole" value="Internal"/>
-        </action>	
+        </action>
       <action id="read">
          <condition name="urn:sambi:names:attribute:systemRole" value="TP"/>
       </action>
       <action id="add">
          <condition name="urn:sambi:names:attribute:systemRole" value="TP"/>
-      </action>        
+      </action>
    </resource>
-   
+
    <resource id="urn:sambi:names:resource:logstatus">
       <action id="read">
          <attribute name="urn:sambi:names:attribute:systemRole" value="BIF;Administratör"/>
          <attribute name="urn:sambi:names:attribute:commissionPurpose" value="Administration"/>
          <attribute name="urn:sambi:names:attribute:commissionPurpose" value="Tillsyn och utvärdering"/>
       </action>
-      
+
       <action id="read">
          <condition name="urn:sambi:names:attribute:systemRole" value="Internal"/>
       </action>
-      
+
       <action id="read">
          <condition name="urn:sambi:names:attribute:systemRole" value="TP"/>
-      </action>      
+      </action>
    </resource>
 
    <resource id="urn:sambi:names:resource:logstatus:gui">
@@ -484,7 +484,7 @@ xmlns:mdattr="urn:oasis:names:tc:SAML:metadata:attribute">
          %CAREGIVERXMLDATA%
       </action>
    </resource>
-   
+
    <!-- ================== L O G R E P O R T ================== -->
 
    <resource id="urn:sambi:names:resource:logreport">
@@ -494,20 +494,20 @@ xmlns:mdattr="urn:oasis:names:tc:SAML:metadata:attribute">
          <attribute name="urn:sambi:names:attribute:commissionPurpose" value="Tillsyn och utvärdering"/>
          %CAREGIVERXMLDATA%
       </action>
-      
+
       <action id="read">
          <condition name="urn:sambi:names:attribute:systemRole" value="System"/>
-         %CAREGIVERXMLDATA%         
+         %CAREGIVERXMLDATA%
       </action>
       <action id="read">
          <condition name="urn:sambi:names:attribute:systemRole" value="Internal"/>
       </action>
-            
+
       <action id="read">
          <condition name="urn:sambi:names:attribute:systemRole" value="TP"/>
-      </action>      
+      </action>
    </resource>
-   
+
     <resource id="urn:sambi:names:resource:logreport:gui">
 		<action id="read">
 			<attribute name="urn:sambi:names:attribute:systemRole" value="BIF;Loggadministratör"/>
@@ -516,7 +516,7 @@ xmlns:mdattr="urn:oasis:names:tc:SAML:metadata:attribute">
          %CAREGIVERXMLDATA%
       </action>
    </resource>
-   
+
 	<resource id="urn:sambi:names:resource:logreport:status">
       <action id="read">
          <attribute name="urn:sambi:names:attribute:systemRole" value="BIF;Administratör"/>
@@ -527,10 +527,10 @@ xmlns:mdattr="urn:oasis:names:tc:SAML:metadata:attribute">
       <action id="read">
          <condition name="urn:sambi:names:attribute:systemRole" value="Internal"/>
       </action>
-      
+
       <action id="read">
          <condition name="urn:sambi:names:attribute:systemRole" value="TP"/>
-      </action>      
+      </action>
    </resource>
 
    <resource id="urn:sambi:names:resource:logreport:status:gui">
@@ -541,19 +541,19 @@ xmlns:mdattr="urn:oasis:names:tc:SAML:metadata:attribute">
          %CAREGIVERXMLDATA%
       </action>
     </resource>
-   
+
    <resource id="urn:sambi:names:resource:logreport:info">
       <action id="read">
          <condition name="urn:sambi:names:attribute:systemRole" value="Internal"/>
       </action>
       <action id="read">
          <condition name="urn:sambi:names:attribute:systemRole" value="TP"/>
-      </action>      
+      </action>
    </resource>
 
 
  <!-- ================== L O G R E P O R T   A R K I V S Ö K N I N G ================= -->
-   
+
    <resource id="urn:sambi:names:resource:logreportarchive">
 		<action id="read">
 			<attribute name="urn:sambi:names:attribute:systemRole" value="BIF;Loggadministratör"/>
@@ -561,20 +561,20 @@ xmlns:mdattr="urn:oasis:names:tc:SAML:metadata:attribute">
          <attribute name="urn:sambi:names:attribute:commissionPurpose" value="Tillsyn och utvärdering"/>
          %CAREGIVERXMLDATA%
       </action>
-      
+
       <action id="read">
          <condition name="urn:sambi:names:attribute:systemRole" value="System"/>
-         %CAREGIVERXMLDATA%         
+         %CAREGIVERXMLDATA%
       </action>
       <action id="read">
          <condition name="urn:sambi:names:attribute:systemRole" value="Internal"/>
       </action>
-            
+
       <action id="read">
          <condition name="urn:sambi:names:attribute:systemRole" value="TP"/>
-      </action>      
+      </action>
    </resource>
-   
+
     <resource id="urn:sambi:names:resource:logreportarchive:gui">
 		<action id="read">
 			<attribute name="urn:sambi:names:attribute:systemRole" value="BIF;Loggadministratör"/>
@@ -582,14 +582,14 @@ xmlns:mdattr="urn:oasis:names:tc:SAML:metadata:attribute">
          <attribute name="urn:sambi:names:attribute:commissionPurpose" value="Tillsyn och utvärdering"/>
          %CAREGIVERXMLDATA%
       </action>
-   </resource>   
-      
+   </resource>
+
    <resource id="urn:sambi:names:resource:logreportarchive:info">
       <action id="read">
          <condition name="urn:sambi:names:attribute:systemRole" value="Internal"/>
       </action>
    </resource>
-   
+
    <!-- ================== A U T H O R I Z A T I O N ================== -->
 
    <resource id="urn:sambi:names:resource:authorization:rules">
@@ -606,8 +606,8 @@ xmlns:mdattr="urn:oasis:names:tc:SAML:metadata:attribute">
          %CAREGIVERXMLDATA%
       </action>
    </resource>
-   
-   
+
+
    <!-- ================== I D P ================== -->
 
    <resource id="urn:sambi:names:resource:idp">
@@ -631,9 +631,9 @@ xmlns:mdattr="urn:oasis:names:tc:SAML:metadata:attribute">
          <condition name="urn:sambi:names:attribute:systemRole" value="Internal"/>
       </action>
    </resource>
-   
+
    <!-- ================== CommissionService ================== -->
-   
+
    <resource id="urn:sambi:names:resource:commission">
       <action id="read">
          <condition name="urn:sambi:names:attribute:systemRole" value="System"/>
@@ -647,13 +647,13 @@ xmlns:mdattr="urn:oasis:names:tc:SAML:metadata:attribute">
       <action id="add">
          <condition name="urn:sambi:names:attribute:systemRole" value="Internal"/>
       </action>
-      
+
       <action id="read">
          <condition name="urn:sambi:names:attribute:systemRole" value="TP"/>
       </action>
       <action id="add">
          <condition name="urn:sambi:names:attribute:systemRole" value="TP"/>
-      </action>      
+      </action>
    </resource>
 
    <!-- ================== S P ================== -->
@@ -703,7 +703,7 @@ xmlns:mdattr="urn:oasis:names:tc:SAML:metadata:attribute">
          <condition name="urn:sambi:names:attribute:systemRole" value="Internal"/>
       </action>
    </resource>
-   
+
    <!-- ================== S Y S T E M ================== -->
 
    <resource id="urn:sambi:names:resource:system">
@@ -756,7 +756,7 @@ xmlns:mdattr="urn:oasis:names:tc:SAML:metadata:attribute">
 
    <resource id="urn:sambi:names:resource:statistics">
       <action id="read">
-         <attribute name="urn:sambi:names:attribute:systemRole" value="BIF;Administratör"/>         
+         <attribute name="urn:sambi:names:attribute:systemRole" value="BIF;Administratör"/>
          <attribute name="urn:sambi:names:attribute:commissionPurpose" value="Administration"/>
          <attribute name="urn:sambi:names:attribute:commissionPurpose" value="Tillsyn och utvärdering"/>
          %CAREGIVERXMLDATA%
@@ -766,10 +766,10 @@ xmlns:mdattr="urn:oasis:names:tc:SAML:metadata:attribute">
          <condition name="urn:sambi:names:attribute:systemRole" value="Internal"/>
       </action>
    </resource>
-  
+
    <resource id="urn:sambi:names:resource:statistics:gui">
       <action id="read">
-         <attribute name="urn:sambi:names:attribute:systemRole" value="BIF;Administratör"/>           
+         <attribute name="urn:sambi:names:attribute:systemRole" value="BIF;Administratör"/>
          <attribute name="urn:sambi:names:attribute:commissionPurpose" value="Administration"/>
          <attribute name="urn:sambi:names:attribute:commissionPurpose" value="Tillsyn och utvärdering"/>
          %CAREGIVERXMLDATA%
@@ -785,17 +785,17 @@ xmlns:mdattr="urn:oasis:names:tc:SAML:metadata:attribute">
 		}
 
 
-        $ConfigFilename = "OLL.BIF.Utils.conf"
+        $ConfigFilename = "Posh-BIF.Utils.conf"
 
 
         # check if directories exists
         # check if hashtable keys are without spaces
-        # 
+        #
 
 
         Switch ($Location) {
-            "Custom" { 
-                $ConfigStoragePath = $Path 
+            "Custom" {
+                $ConfigStoragePath = $Path
             }
             "Current-Location" {
                 #if($Path) {
@@ -803,7 +803,7 @@ xmlns:mdattr="urn:oasis:names:tc:SAML:metadata:attribute">
                 #}
                 $ConfigStoragePath = (Get-Location).Path
             }
-            "Module-Location" {                
+            "Module-Location" {
                 #if($Path) {
                 #    Throw "Parameter Path can't be used with Location Module-Location"
                 #}
@@ -848,7 +848,7 @@ xmlns:mdattr="urn:oasis:names:tc:SAML:metadata:attribute">
                         Throw "Could not create `"{0}`", `"{1}`" or `"{2}`"`r`n{3}" -f $UserTemplatePath, $SystemTemplatePath, $conf, $_.Exception.Message
                     }
                 }
-                Catch { 
+                Catch {
                     # catch here because function _Test-DirectoryWriteAccess uses a validate script that throws an exception
                     Write-Warning "You don't seem to have write access to configuration file `"$conf`". Check that the file exist and you have access rights to it."
                 }
@@ -860,12 +860,12 @@ xmlns:mdattr="urn:oasis:names:tc:SAML:metadata:attribute">
         $ConfigStoragePath = Join-Path -Path $ConfigStoragePath -ChildPath $ConfigFileName
         if($(Test-Path -Path $ConfigStoragePath)) {
             Write-Warning "$ConfigStoragePath already exists!"
-            
+
             if(-Not $pscmdlet.ShouldProcess("$ConfigStoragePath","Overwrite")) {
                 $OverWrite=$False
             }
-        } 
-        
+        }
+
         if($Overwrite) {
             $ConfigReferences | Export-Clixml -Path $ConfigStoragePath
         } else {
