@@ -1,3 +1,3 @@
-En powershellmodul för att hantera konfiguration till Ineras Lokala Säkerhetstjänster.
+En powershellmodul fÃ¶r att hantera konfiguration till Ineras Lokala SÃ¤kerhetstjÃ¤nster.
 
 
