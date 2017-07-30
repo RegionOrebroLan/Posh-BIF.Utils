@@ -3,9 +3,11 @@
         Hämtar konfigurationsinformation om registrerade miljöer.
 
     .DESCRIPTION
+    Hämtar konfigurationsinformation om registrerade miljöer.
 
     .PARAMETER Environment
         Anger vilken miljö konfiguration skall visas för.
+        Kan uteslutas för att få alla registrerade miljöer.
 
     .EXAMPLE
         Get-BIFEnvironment
@@ -20,7 +22,6 @@
     .NOTES
 
     .LINK
-
 #>
 Function Get-BIFEnvironment {
     [cmdletBinding()]
@@ -50,43 +51,41 @@ Function Get-BIFEnvironment {
 
         $Environment = $PSBoundParameters["Environment"].OriginalString
 
-
         if($Environment) {
+          $EnvArray = $Environment
         } else {
-
-            foreach($env in $script:EnvironmentConfig.keys) {
-
-                $EnvName = $env
-                $EnvConfigFile = $EnvConfigFile = $script:EnvironmentConfig[$env]
-
-                try {
-                    # use resolve-path to get the full path of file.
-                    # on .NET core there seems to be problem with saving to a relative path
-                    $EnvConfigFile = (Resolve-Path -Path $EnvConfigFile).Path
-                    
-                    [xml]$ConfigData = Get-Content $EnvConfigFile -ErrorAction Stop
-                }
-                catch {
-                    Throw "Could not load configuration from `"{0}`". Make sure the file exists and your account has access to it, or that EnvironmentConfig is defined, is the module loaded properly?" -f $EnvName
-                }
-
-
-                New-Object -TypeName psobject -Property @{
-                    Environment = $EnvName;
-                    ConfigFile = $EnvConfigFile;
-                    Version = $ConfigData.OLLBIF.Environment.Verstion;
-                    UserAccessTemplate = $ConfigData.OLLBIF.Environment.UserAccessTemplate;
-                    SystemAccessTemplate = $ConfigData.OLLBIF.Environment.SystemAccessTemplate;
-                }
-
-            }
+          # not really an array returned from keys, but whatever...
+          $EnvArray = $script:EnvironmentConfig.keys
         }
-
-
-
     }
 
     PROCESS {
+
+      #foreach($env in $script:EnvironmentConfig.keys) {
+      foreach($env in $EnvArray) {
+
+          $EnvName = $env
+          $EnvConfigFile = $EnvConfigFile = $script:EnvironmentConfig[$env]
+
+          try {
+              # use resolve-path to get the full path of file.
+              # on .NET core there seems to be problem with saving to a relative path
+              $EnvConfigFile = (Resolve-Path -Path $EnvConfigFile).Path
+
+              [xml]$ConfigData = Get-Content $EnvConfigFile -ErrorAction Stop
+          }
+          catch {
+              Throw "Could not load configuration from `"{0}`". Make sure the file exists and your account has access to it, or that EnvironmentConfig is defined, is the module loaded properly?" -f $EnvName
+          }
+
+          New-Object -TypeName psobject -Property @{
+              Environment = $EnvName;
+              ConfigFile = $EnvConfigFile;
+              Version = $ConfigData.OLLBIF.Environment.Verstion;
+              UserAccessTemplate = $ConfigData.OLLBIF.Environment.UserAccessTemplate;
+              SystemAccessTemplate = $ConfigData.OLLBIF.Environment.SystemAccessTemplate;
+          }
+      }
     }
 
     END {
