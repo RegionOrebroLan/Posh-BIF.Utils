@@ -39,4 +39,5 @@ Write-Verbose "The following functions are now available in the current session:
 Write-Verbose "For information about a specific function, see get-help <command>" -Verbose:$true
 
 # Read config
-Use-BIFSettings -Debug -verbose
+#Use-BIFSettings -Debug -verbose
+Use-BIFSettings
