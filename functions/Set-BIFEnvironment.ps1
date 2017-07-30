@@ -38,7 +38,8 @@
 
 #>
 Function Set-BIFEnvironment {
-    [cmdletBinding(SupportShouldProcess=$True)]
+    [cmdletBinding(SupportsShouldProcess=$True
+                  ,ConfirmImpact='High')]
     Param(
       [Parameter(Mandatory=$False)]
       [string]$SystemAccessTemplate
@@ -66,11 +67,11 @@ Function Set-BIFEnvironment {
     # Generated with New-FortikaPSFunction -Name Set-BIFEnvironment -Params @{Environment="string"; Name="string"; SystemAccessTemplate="string"; Version="string"; ConfigFile="String"; UserAccessTemplate="string"} -Synopsis "Ändrar inställningar för en viss miljö" -Path ./Posh-BIF.Utils/functions/Set-BIFEnvironment.ps1
 
     BEGIN {
-      # If -debug is set, change $DebugPreference so that output is a little less annoying.
-      #    http://learn-powershell.net/2014/06/01/prevent-write-debug-from-bugging-you/
-      If ($PSBoundParameters['Debug']) {
-          $DebugPreference = 'Continue'
-      }
+        # If -debug is set, change $DebugPreference so that output is a little less annoying.
+        #    http://learn-powershell.net/2014/06/01/prevent-write-debug-from-bugging-you/
+        If ($PSBoundParameters['Debug']) {
+            $DebugPreference = 'Continue'
+        }
 
         if(-Not $script:EnvironmentConfig) {
             Throw "Global Environment config is not set! Is the module properly loaded? use Use-BIFSettings to re-read configuration data."
@@ -95,27 +96,43 @@ Function Set-BIFEnvironment {
 
       if($Version) {
         $ConfigData.OLLBIF.Environment.Version = $Version
+
+        Write-Debug "Version: $($ConfigData.OLLBIF.Environment.Version)"
       }
 
       if($SystemAccessTemplate) {
-        $ConfigData.OLLBIF.Environment.SystemAccessTemplate = $SystemAccessTemplate
+        if($(Test-Path -Path $SystemAccessTemplate)) {
+          $ConfigData.OLLBIF.Environment.SystemAccessTemplate = $SystemAccessTemplate
+        } else {
+          Write-Warning "$SystemAccessTemplate does not exist."
+          if($PSCmdlet.ShouldProcess($SystemAccessTemplate,"Initialize")) {
+            #TODO: Initialize-BIFSystemAccessTemplate ?? internal function only?
+          }
+        }
       }
 
       if($UserAccessTemplate) {
-        $ConfigData.OLLBIF.Environment.UserAccessTemplate = $UserAccessTemplate
+        if($(Test-Path -Path $UserAccessTemplate)) {
+          $ConfigData.OLLBIF.Environment.UserAccessTemplate = $UserAccessTemplate
+        } else {
+          Write-Warning "$UserAccessTemplate does not exist."
+          if($PSCmdlet.ShouldProcess($UserAccessTemplate,"Initialize")) {
+            #TODO: Initialize-BIFUserAccessTemplate ?? internal function only?
+          }
+        }
       }
 
       if($ConfigFile) {
-        $ConfigData.OLLBIF.Environment.ConfigFile = $ConfigFile
-
         # change
         $EnvConfigFile = (resolve-path -path $ConfigFile).Path
 
+        # if specified file exist, set it.
         if($(Test-Path -Path $EnvConfigFile)) {
+          $ConfigData.OLLBIF.Environment.ConfigFile = $ConfigFile
+        } else {
+          #TODO: Initialize-BIFEnvironmentConfig ?? internal function only??
         }
-
       }
-
     }
 
     END {
