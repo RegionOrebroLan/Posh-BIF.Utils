@@ -24,7 +24,7 @@
     .LINK
 
 #>
-Function RemoveBIFCareprovider {
+Function Remove-BIFCareprovider {
     [cmdletBinding(SupportsShouldProcess=$True
                   ,ConfirmImpact='Medium'
                   ,DefaultParameterSetName='ByCareProviderHSAId')]
