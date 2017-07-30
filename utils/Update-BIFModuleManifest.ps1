@@ -1,15 +1,7 @@
-﻿<#
-	.SYNOPSIS
+[cmdletBinding()]
+Param(
+)
 
-	.DESCRIPTION
-
-	.EXAMPLE
-
-	.NOTES
-
-	.LINK
-
-#>
 Function Update-BIFModuleManifest {
     [cmdletBinding()]
     Param(
@@ -21,7 +13,6 @@ Function Update-BIFModuleManifest {
 		If ($PSBoundParameters['Debug']) {
 			$DebugPreference = 'Continue'
 		}
-
 
 
         $ManifestParams = @{
@@ -139,15 +130,20 @@ Function Update-BIFModuleManifest {
         $ManifestParams.Path = $(Join-Path -Path $ModuleRoot -ChildPath "Posh-BIF.Utils.psd1" )
 
         # There is probably a better way to do this...
-        $Functions = get-childitem "${ModuleRoot}\functions\*.ps1" | ? { $_.Name -like '*-BIF*.ps1'} | ForEach-Object { $_.Name.Replace(".ps1","") }
+        #$Functions = get-childitem "${ModuleRoot}\functions\*.ps1" | ? { $_.Name -like '*-BIF*.ps1'} | ForEach-Object { $_.Name.Replace(".ps1","") }
+        # concat path with join-path to support OSX
+        $FunctionPath = Join-Path -Path ${ModuleRoot} -ChildPath "functions"
+        Write-Verbose "Reading functions from $FunctionPath"
+        $Functions = Get-ChildItem -Path $FunctionPath -Filter "*.ps1" | ? { $_.Name -like '*-BIF*.ps1'} | ForEach-Object { $_.Name.Replace(".ps1","") }
+
 
         $ManifestParams.FunctionsToExport = $Functions
 
         New-ModuleManifest @ManifestParams
 
         # work-around for git treating UTF-16 as binary
-        $ManifestContent = Get-Content -Path $ManifestParams.Path
-        $ManifestContent | Set-Content -Path $ManifestParams.Path -Encoding UTF8
+        #$ManifestContent = Get-Content -Path $ManifestParams.Path
+        #$ManifestContent | Set-Content -Path $ManifestParams.Path -Encoding UTF8
     }
 
     PROCESS {

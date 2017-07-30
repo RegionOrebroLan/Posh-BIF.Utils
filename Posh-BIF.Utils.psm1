@@ -16,7 +16,9 @@ if(-Not ${PSScriptRoot}) {
 
 
 # dot-source cmdlet functions by listing all ps1-files in subfolder functions to where the module file is located
-dir ${ModuleRoot}\functions\*.ps1 | Sort-Object Name | ? { $_.Name -notlike '_helper_functions*'} | ForEach-Object { . $_.FullName }
+$FunctionPath = Join-Path -Path ${ModuleRoot} -ChildPath "functions"
+Get-ChildItem -Path $FunctionPath -Filter "*.ps1" | ? { $_.Name -like '*-BIF*.ps1'} | Sort-Object | ForEach-Object { . $_.FullName }
+#dir ${ModuleRoot}\functions\*.ps1 | Sort-Object Name | ? { $_.Name -notlike '_helper_functions*'} | ForEach-Object { . $_.FullName }
 #write-host $(dir ${ModuleRoot}\functions\*.ps1 | Sort-Object Name | out-string)
 
 
