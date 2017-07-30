@@ -81,7 +81,7 @@ Function Get-BIFEnvironment {
           New-Object -TypeName psobject -Property @{
               Environment = $EnvName;
               ConfigFile = $EnvConfigFile;
-              Version = $ConfigData.OLLBIF.Environment.Verstion;
+              Version = $ConfigData.OLLBIF.Environment.Version;
               UserAccessTemplate = $ConfigData.OLLBIF.Environment.UserAccessTemplate;
               SystemAccessTemplate = $ConfigData.OLLBIF.Environment.SystemAccessTemplate;
           }
