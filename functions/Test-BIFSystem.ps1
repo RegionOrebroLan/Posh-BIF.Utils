@@ -41,7 +41,7 @@ Function Test-BIFSystem {
         $RuntimeParameterDictionary = _New-DynamicValidateSetParam -ParameterName "Environment" `
                                                                    -ParameterType [DynParamQuotedString] `
                                                                    -Mandatory $True `
-                                                                   -FillValuesWith "_OLL.BIF.Utils-dynamic-params_Get-EnvironmentShortNames" 
+                                                                   -FillValuesWith "_OLL.BIF.Utils-dynamic-params_Get-EnvironmentShortNames"
 
         return $RuntimeParameterDictionary
     }
@@ -52,9 +52,13 @@ Function Test-BIFSystem {
         }
 
         $Environment = $PSBoundParameters["Environment"].OriginalString
-        
+
         try {
             $EnvConfigFile = $script:EnvironmentConfig[$Environment]
+            # use resolve-path to get the full path of file.
+            # on .NET core there seems to be problem with saving to a relative path
+            $EnvConfigFile = (Resolve-Path -Path $EnvConfigFile).Path
+
             [xml]$ConfigData = Get-Content $EnvConfigFile -ErrorAction Stop
         }
         catch {

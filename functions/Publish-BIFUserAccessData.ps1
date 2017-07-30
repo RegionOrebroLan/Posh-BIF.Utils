@@ -29,7 +29,7 @@ Function Publish-BIFUserAccessData {
         $RuntimeParameterDictionary = _New-DynamicValidateSetParam -ParameterName "Environment" `
                                                                    -ParameterType [DynParamQuotedString] `
                                                                    -Mandatory $True `
-                                                                   -FillValuesWith "_OLL.BIF.Utils-dynamic-params_Get-EnvironmentShortNames" 
+                                                                   -FillValuesWith "_OLL.BIF.Utils-dynamic-params_Get-EnvironmentShortNames"
 
         return $RuntimeParameterDictionary
     }
@@ -40,9 +40,13 @@ Function Publish-BIFUserAccessData {
         }
 
         $Environment = $PSBoundParameters["Environment"].OriginalString
-        
+
         try {
             $EnvConfigFile = $script:EnvironmentConfig[$Environment]
+            # use resolve-path to get the full path of file.
+            # on .NET core there seems to be problem with saving to a relative path
+            $EnvConfigFile = (Resolve-Path -Path $EnvConfigFile).Path
+
             [xml]$ConfigData = Get-Content $EnvConfigFile -ErrorAction Stop
         }
         catch {
@@ -69,8 +73,8 @@ Function Publish-BIFUserAccessData {
                 foreach($Careprovider in $Customer.Careproviders.Careprovider) {
 
                     if(-Not $Careprovider.excludeFromUserACL) {
-                        $CustomerUserACLData += $CustomerUserACLDataTemplate | _Expand-VariablesInString -VariableMappings @{ 
-                                                                    CAREPROVIDERNAME = $Careprovider.name; 
+                        $CustomerUserACLData += $CustomerUserACLDataTemplate | _Expand-VariablesInString -VariableMappings @{
+                                                                    CAREPROVIDERNAME = $Careprovider.name;
                                                                     CAREPROVIDERHSAID = $Careprovider.hsaid;
                                                                     CUSTOMERNAME = $Customer.name;
                                                                  }
@@ -83,10 +87,10 @@ Function Publish-BIFUserAccessData {
                 # The defined systems can have their own care providers
                 # Two loops should not really be neccessary. It's probably possible to just loop $Customer.Systems.system.careproficers.careprovider
                 #   to get all careproviders that's attached to all underlying systems for a particular customer.
-                # But since the flag excludeFromUserACL might be used the code gets a little easier to read if each underlying care provider is looped 
+                # But since the flag excludeFromUserACL might be used the code gets a little easier to read if each underlying care provider is looped
                 # separately
                 foreach($System in $Customer.Systems.system) {
-                
+
                     # check if specified care provider shall be included (not excluded)
                     if(-Not $System.careproviders.excludeFromUserACL -or $System.careproviders.excludeFromUserACL -eq 0) {
 
@@ -95,8 +99,8 @@ Function Publish-BIFUserAccessData {
 
                             if(-Not $Careprovider.excludeFromUserACL -or $Careprovder.excludeFromUserACL -eq 0) {
 
-                                $CustomerUserACLData += $CustomerUserACLDataTemplate | _Expand-VariablesInString -VariableMappings @{ 
-                                                                            CAREPROVIDERNAME = $Careprovider.name; 
+                                $CustomerUserACLData += $CustomerUserACLDataTemplate | _Expand-VariablesInString -VariableMappings @{
+                                                                            CAREPROVIDERNAME = $Careprovider.name;
                                                                             CAREPROVIDERHSAID = $Careprovider.hsaid;
                                                                             CUSTOMERNAME = "$($Customer.name) ($($System.Name))";
                                                                          }
@@ -110,7 +114,7 @@ Function Publish-BIFUserAccessData {
                 $CustomerUserACLData += "`r`n"
             }
         }
-    
+
         # create a directory to store the files to be written, together with a backup directory
         $OutputDirectory = "$(split-path -path $script:EnvironmentConfig[$Environment])\UserRules"
         _New-DirectoryWithTest -Name $OutputDirectory
@@ -124,7 +128,7 @@ Function Publish-BIFUserAccessData {
 
         # get the template for user rules.
         # In the template, variable %CAREGIVERXMLDATA% must be defined where the created rules, stored in $CustomerUserACLData, should be inserted.
-        # _Expand-VariablesInString  does a replace on all %CAREGIVERXMLDATA% with the data in $CustomerUserACLData 
+        # _Expand-VariablesInString  does a replace on all %CAREGIVERXMLDATA% with the data in $CustomerUserACLData
         Get-Content $ConfigData.OLLBIF.Environment.UserAccessTemplate -Encoding UTF8 -raw | `
              _Expand-VariablesInString -VariableMappings @{ CAREGIVERXMLDATA = $CustomerUserACLData } | `
              Out-File -FilePath $OutputFileName -Encoding utf8

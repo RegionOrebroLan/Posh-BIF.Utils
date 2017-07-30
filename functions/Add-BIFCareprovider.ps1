@@ -62,7 +62,7 @@ Function Add-BIFCareprovider {
         $RuntimeParameterDictionary = _New-DynamicValidateSetParam -ParameterName "Environment" `
                                                                    -ParameterType [DynParamQuotedString] `
                                                                    -Mandatory $True `
-                                                                   -FillValuesWith "_OLL.BIF.Utils-dynamic-params_Get-EnvironmentShortNames" 
+                                                                   -FillValuesWith "_OLL.BIF.Utils-dynamic-params_Get-EnvironmentShortNames"
 
         return $RuntimeParameterDictionary
     }
@@ -73,9 +73,13 @@ Function Add-BIFCareprovider {
         }
 
         $Environment = $PSBoundParameters["Environment"].OriginalString
-        
+
         try {
             $EnvConfigFile = $script:EnvironmentConfig[$Environment]
+            # use resolve-path to get the full path of file.
+            # on .NET core there seems to be problem with saving to a relative path
+            $EnvConfigFile = (Resolve-Path -Path $EnvConfigFile).Path
+
             [xml]$ConfigData = Get-Content $EnvConfigFile -ErrorAction Stop
         }
         catch {
@@ -120,7 +124,7 @@ Function Add-BIFCareprovider {
                 Throw "Careprovider `"$CareproviderName`" already exists! Or another careprovider with HSA-id `"$CareproviderHSAid`" already exists!"
             }
 
-        } 
+        }
 
         $Newcareprovider = $ConfigData.CreateElement("Careprovider")
         $Newcareprovider.SetAttribute("name",$CareproviderName)
@@ -148,7 +152,7 @@ Function Add-BIFCareprovider {
                 # out-null because AppendChild also returnes data and the pipeline should not be polluted.
                 $ApplyToNode.AppendChild($CareprovidersNode) | Out-Null
             }
-       
+
 
 
         $ConfirmPreference = $oldconfpref
@@ -156,7 +160,15 @@ Function Add-BIFCareprovider {
 
     END {
         if($EnvConfigFile) {
+
+          #Apparently xmldocument.Save(string filename) is not available on .NET core (OSX)
+          if($PSEdition -eq "Core") {
+            # we use a streamWriter instead.
+            # this approach is probably available on full .NET as well
+            $Configdata.Save([System.IO.StreamWriter]::new($EnvConfigFile))
+          } else {
             $Configdata.save($EnvConfigFile)
+          }
         } else {
             Throw "Can't save configuration! Which file to save to is not set!"
         }

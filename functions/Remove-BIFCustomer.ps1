@@ -57,6 +57,10 @@ Function Remove-BIFCustomer {
 
         try {
             $EnvConfigFile = $script:EnvironmentConfig[$Environment]
+            # use resolve-path to get the full path of file.
+            # on .NET core there seems to be problem with saving to a relative path
+            $EnvConfigFile = (Resolve-Path -Path $EnvConfigFile).Path
+
             [xml]$ConfigData = Get-Content $EnvConfigFile -ErrorAction Stop
         }
         catch {
@@ -97,7 +101,15 @@ Function Remove-BIFCustomer {
           if($EnvConfigFile) {
 
             if($PSCmdlet.ShouldProcess($CustName,"Remove")) {
-              $Configdata.save($EnvConfigFile)
+
+              #Apparently xmldocument.Save(string filename) is not available on .NET core (OSX)
+              if($PSEdition -eq "Core") {
+                # we use a streamWriter instead.
+                # this approach is probably available on full .NET as well
+                $Configdata.Save([System.IO.StreamWriter]::new($EnvConfigFile))
+              } else {
+                $Configdata.save($EnvConfigFile)
+              }
             }
           } else {
               Throw "Can't save configuration! Which file to save to is not set!"
