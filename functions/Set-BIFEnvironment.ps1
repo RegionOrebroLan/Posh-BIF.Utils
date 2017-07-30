@@ -3,21 +3,34 @@
         Ändrar inställningar för en viss miljö
 
     .DESCRIPTION
+      Ändrar inställningar för en viss miljö
 
     .PARAMETER Environment
+      Anger vilken miljö som parametrar skall ändras för.
 
     .PARAMETER SystemAccessTemplate
-
-    .PARAMETER ConfigFile
-
-    .PARAMETER Version
+      Anger sökväg till mall för systemregler.
 
     .PARAMETER UserAccessTemplate
+      Anger sökväg till mall för användarregler.
+
+    .PARAMETER ConfigFile
+      Anger sökväg till konfigurationsfil.
+      Om filen som pekas ut redan finns skrivs inte aktuell konfig data dit, utan filen börjar direkt användas.
+
+    .PARAMETER Version
+      Anger version på miljön.
 
     .PARAMETER Name
+      Anger namn på miljön. Om parametern spec'as ändras namnet på miljön.
 
     .EXAMPLE
-        Set-BIFEnvironment
+        Set-BIFEnvironment -Environment Test -Version "2.5"
+
+    .EXAMPLE
+        Set-BIFEnvironment -Environment Test -Name "Stage"
+
+        Ändrar namn på miljön Test till Stage
 
     .NOTES
 
@@ -31,13 +44,13 @@ Function Set-BIFEnvironment {
       [string]$SystemAccessTemplate
 
       ,[Parameter(Mandatory=$False)]
+      [string]$UserAccessTemplate
+
+      ,[Parameter(Mandatory=$False)]
       [String]$ConfigFile
 
       ,[Parameter(Mandatory=$False)]
       [string]$Version
-
-      ,[Parameter(Mandatory=$False)]
-      [string]$UserAccessTemplate
 
       ,[Parameter(Mandatory=$False)]
       [string]$Name
@@ -78,10 +91,41 @@ Function Set-BIFEnvironment {
         }
     }
     PROCESS {
+      #TODO: Add some validation to characters to that it's not something that can't be in XML
+
+      if($Version) {
+        $ConfigData.OLLBIF.Environment.Version = $Version
+      }
+
+      if($SystemAccessTemplate) {
+        $ConfigData.OLLBIF.Environment.SystemAccessTemplate = $SystemAccessTemplate
+      }
+
+      if($UserAccessTemplate) {
+        $ConfigData.OLLBIF.Environment.UserAccessTemplate = $UserAccessTemplate
+      }
+
+      if($ConfigFile) {
+        $ConfigData.OLLBIF.Environment.ConfigFile = $ConfigFile
+
+        # change
+        $EnvConfigFile = (resolve-path -path $ConfigFile).Path
+
+        if($(Test-Path -Path $EnvConfigFile)) {
+        }
+
+      }
 
     }
 
     END {
-
+      #Apparently xmldocument.Save(string filename) is not available on .NET core (OSX)
+      if($PSEdition -eq "Core") {
+        # we use a streamWriter instead.
+        # this approach is probably available on full .NET as well
+        $Configdata.Save([System.IO.StreamWriter]::new($EnvConfigFile))
+      } else {
+        $Configdata.save($EnvConfigFile)
+      }
     }
 }
