@@ -14,14 +14,16 @@ Function _Backup-ConfigFile {
     PROCESS {
         $TS = (Get-date).ToSTring('yyyyMMdd-HHmmss')
 
-        $BackupDir = "$(split-path $FileName)\config_backup"
+        #$BackupDir = "$(split-path $FileName)\config_backup"
+        $BackupDir = Join-Path -Path $(Split-Path -Path $FileName) -ChildPath "config_backup"
         $BackupFile = "$(split-path $FileName -Leaf)_$TS"
+        $BackupPath = Join-Path -Path $BackupDir -ChildPath $BackupFile
 
-        Write-Verbose "Backing up config file to $Backupdir"
+        Write-Verbose "Backing up config file to $BackupPath"
 
         _New-DirectoryWithTest $BackupDir
 
-        copy-item $FileName "$BackupDir\$BackupFile" -Verbose:$false        
+        copy-item -Path $FileName -Destination $BackupPath -Verbose:$false
     }
 
     END {
@@ -46,7 +48,11 @@ Function _New-DirectoryWithTest {
         if(-Not $(Test-Path $Name)) {
             try {
                 # ErrorAction Stop för att try-catch skall funka
-                mkdir $Name -ErrorAction stop | Out-Null
+
+                Write-Debug "Creating $Name"
+
+                # be very explicit with parameters to support other OS'es than windows
+                new-item -Path $Name -type Directory -ErrorAction stop | Out-Null
             }
             catch {
                 Throw $_
@@ -81,13 +87,11 @@ Function _Expand-VariablesInString {
 }
 
 <#
-	.SYNOPSIS        
+	.SYNOPSIS
 
-	.DESCRIPTION        
+	.DESCRIPTION
 
-    .PARAMETER         
-
-	.EXAMPLE        
+	.EXAMPLE
 
 	.NOTES
 
