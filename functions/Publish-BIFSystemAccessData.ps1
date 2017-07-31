@@ -92,10 +92,10 @@ Function Publish-BIFSystemAccessData {
         $TS = (Get-date).ToSTring('yyyyMMdd-HHmmss')
 
         # create a directory to store the files, and a backup directory
-        $OutputDirectory = "$(split-path -path $script:EnvironmentConfig[$Environment])\SystemRules"
+        $OutputDirectory = join-path -path $(split-path -path $script:EnvironmentConfig[$Environment]) -ChildPath "SystemRules"
         _New-DirectoryWithTest -Name $OutputDirectory
 
-        $BackupDirectory = "$OutputDirectory\Backup"
+        $BackupDirectory = Join-Path -Path $OutputDirectory -ChildPath "Backup"
         _New-DirectoryWithTest -Name $BackupDirectory
 
 
@@ -157,11 +157,12 @@ Function Publish-BIFSystemAccessData {
 
 
                 # A replace is made of all "dangerous" characters so that the shortname can't traverse paths
-                $OutputFileName = "$($OutputDirectory)\regler_$($Customer.shortname -replace "[/.\\:]","-")_vårdsystem_$($System.Name)_$($system.hsaid).xml"
+                $OutputFileName = Join-Path -Path $OutputDirectory -ChildPath "regler_$($Customer.shortname -replace "[/.\\:]","-")_vårdsystem_$($System.Name)_$($system.hsaid).xml"
 
                 if( $(Test-Path $OutputFileName) ) {
                     Write-Warning "$OutputFileName already exists. Backing up to $BackupDirectory"
-                    Move-Item $OutputFileName "$BackupDirectory\$(split-path -path $OutputFileName -Leaf)_$TS" -Verbose:$False
+                    $BackupFileName = "$(split-path -path $OutputFileName -Leaf)_$TS"
+                    Move-Item -Path $OutputFileName -Destination $(Join-Path -Path $BackupDirectory -ChildPath $BackupFileName ) -Verbose:$False
                 }
 
 

@@ -115,15 +115,15 @@ Function Publish-BIFUserAccessData {
             }
         }
 
-        # create a directory to store the files to be written, together with a backup directory
-        $OutputDirectory = "$(split-path -path $script:EnvironmentConfig[$Environment])\UserRules"
+        # create a directory to store the files, and a backup directory
+        $OutputDirectory = join-path -path $(split-path -path $script:EnvironmentConfig[$Environment]) -ChildPath "UserRules"
         _New-DirectoryWithTest -Name $OutputDirectory
 
-        $BackupDirectory = "$OutputDirectory\Backup"
+        $BackupDirectory = Join-Path -Path $OutputDirectory -ChildPath "Backup"
         _New-DirectoryWithTest -Name $BackupDirectory
 
 
-        $OutputFileName = "$($OutputDirectory)\regler_default_local_OLL-$($Configdata.OLLBIF.Environment.Name)-$($Configdata.OLLBIF.Environment.Version)_$($TS).xml"
+        $OutputFileName = Join-Path -Path $OutputDirectory -ChildPath "regler_default_local_OLL-$($Configdata.OLLBIF.Environment.Name)-$($Configdata.OLLBIF.Environment.Version)_$($TS).xml"
 
 
         # get the template for user rules.
