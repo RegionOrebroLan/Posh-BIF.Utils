@@ -9,23 +9,15 @@ if(-Not ${PSScriptRoot}) {
 
 
 # make sure helper functions are included first
-. ${ModuleRoot}\functions\helpers\_OLL.BIF.Utils-dynamic-params_QuotedStringHelperClass.ps1
-. ${ModuleRoot}\functions\helpers\_OLL.BIF.Utils-dynamic-params_Get-ObjectTypesForValidateSet.ps1
-. ${ModuleRoot}\functions\helpers\_New-DynamicValidateSetParam.ps1
-. ${ModuleRoot}\functions\helpers\Test-Xml.ps1
-. ${ModuleRoot}\functions\helpers\_helper_functions.ps1
+Get-ChildItem -Path $(Join-Path -Path $ModuleRoot -ChildPath "private") | ForEach-Object { . $_.FullName }
 
 
-# dot-source cmdlet functions by listing all ps1-files in subfolder functions to where the module file is located
-$FunctionPath = Join-Path -Path ${ModuleRoot} -ChildPath "functions"
-Get-ChildItem -Path $FunctionPath -Filter "*.ps1" | ? { $_.Name -like '*-BIF*.ps1'} | Sort-Object | ForEach-Object { . $_.FullName }
-#dir ${ModuleRoot}\functions\*.ps1 | Sort-Object Name | ? { $_.Name -notlike '_helper_functions*'} | ForEach-Object { . $_.FullName }
-#write-host $(dir ${ModuleRoot}\functions\*.ps1 | Sort-Object Name | out-string)
 
 
-# make cmdlets available by exporting them.
-# This has been moved to the module manifest.
-#Get-ChildItem function: | ? { $_.Name -like '*BIF*' -and $_.Name -notlike '_*' } | Select Name | ForEach-Object { Export-ModuleMember -Function $_.Name }
+# dot-source cmdlet functions by listing all ps1-files in subfolder public to where the module file is located
+$PublicFunctionPath = Join-Path -Path ${ModuleRoot} -ChildPath "public"
+Get-ChildItem -Path $PublicFunctionPath -Filter "*.ps1" | ? { $_.Name -like '*-BIF*.ps1'} | Sort-Object | ForEach-Object { . $_.FullName }
+
 
 
 
