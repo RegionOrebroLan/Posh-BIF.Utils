@@ -12,6 +12,7 @@ if(-Not ${PSScriptRoot}) {
 . ${ModuleRoot}\functions\helpers\_OLL.BIF.Utils-dynamic-params_QuotedStringHelperClass.ps1
 . ${ModuleRoot}\functions\helpers\_OLL.BIF.Utils-dynamic-params_Get-ObjectTypesForValidateSet.ps1
 . ${ModuleRoot}\functions\helpers\_New-DynamicValidateSetParam.ps1
+. ${ModuleRoot}\functions\helpers\Test-Xml.ps1
 . ${ModuleRoot}\functions\helpers\_helper_functions.ps1
 
 

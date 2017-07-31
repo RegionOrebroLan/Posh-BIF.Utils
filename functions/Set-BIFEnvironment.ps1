@@ -83,59 +83,100 @@ Function Set-BIFEnvironment {
             $EnvConfigFile = $script:EnvironmentConfig[$Environment]
             # use resolve-path to get the full path of file.
             # on .NET core there seems to be problem with saving to a relative path
-            $EnvConfigFile = (Resolve-Path -Path $EnvConfigFile).Path
+            $EnvConfigFile = (Resolve-Path -Path $EnvConfigFile -ErrorAction stop).Path
 
             [xml]$ConfigData = Get-Content $EnvConfigFile -ErrorAction Stop
         }
-        catch {
-            Throw "Could not load configuration from `"$EnvConfigFile`". Make sure the file exists and your account has access to it, or that EnvironmentConfig is defined, is the module loaded properly?"
+        catch {           
+            # if there was an error loading config file, allow to specify a new one with param ConfigFile
+            # this is not the prettyest...
+            $ConfigLoadError = $True
+            if($ConfigFile) {
+            } else {
+                Throw "Could not load configuration from `"$EnvConfigFile`". Make sure the file exists and your account has access to it, or that EnvironmentConfig is defined, is the module loaded properly? Use `"Set-BIFEnvironment -Environment $Environment -ConfigFile <new config>`" to specify another configuration file."
+            }
         }
     }
     PROCESS {
-      #TODO: Add some validation to characters to that it's not something that can't be in XML
+        if($ConfigFile) {
+            try {
+                $EnvConfigFile = (resolve-path -path $ConfigFile -ErrorAction stop).Path
 
-      if($Version) {
-        $ConfigData.OLLBIF.Environment.Version = $Version
+                # if specified file exist, set it.
+                if( $(Test-Path -Path $EnvConfigFile) ) {
 
-        Write-Debug "Version: $($ConfigData.OLLBIF.Environment.Version)"
-      }
+                    Write-Verbose "$EnvConfigFile already exists. Going to try and use that..."
 
-      if($SystemAccessTemplate) {
-        if($(Test-Path -Path $SystemAccessTemplate)) {
-          $ConfigData.OLLBIF.Environment.SystemAccessTemplate = $SystemAccessTemplate
-        } else {
-          Write-Warning "$SystemAccessTemplate does not exist."
-          if($PSCmdlet.ShouldProcess($SystemAccessTemplate,"Initialize")) {
-            #TODO: Initialize-BIFSystemAccessTemplate ?? internal function only?
-          }
+                    # if the specidied file exist, then test if it's valid                   
+                    if( $(Test-BIFSettings -EnvironmentConfigFile $EnvConfigFile) ) {
+                    
+                        Write-Debug "$EnvConfigFile passed validation check"
+
+                        $script:EnvironmentConfig[$Environment] = $EnvConfigFile
+
+                        # load $configdata from newly specified config file.
+                        # Because we might have more options specified on cmdline which needs to go into the file.
+                        [xml]$ConfigData = Get-Content $EnvConfigFile -ErrorAction Stop
+
+                        # write base config
+                        try {
+                            $script:EnvironmentConfig | Export-Clixml -Path  $script:EnvironmentConfigPath -ErrorAction Stop
+                        }
+                        catch {
+                            Throw "Could not write base config to {0}`r`n{1}" -f  $script:EnvironmentConfigPath, $_.Exception.Message
+                        }
+
+
+                    } else {
+                        Throw "Config `"{0}`" does not seem to be valid!" -f $EnvConfigFile
+                    }
+
+                } else {
+                    #TODO: Initialize-BIFEnvironmentConfig ?? internal function only??
+                }
+            }
+            catch {
+                Throw $_.Exception.Message
+            }
         }
-      }
 
-      if($UserAccessTemplate) {
-        if($(Test-Path -Path $UserAccessTemplate)) {
-          $ConfigData.OLLBIF.Environment.UserAccessTemplate = $UserAccessTemplate
-        } else {
-          Write-Warning "$UserAccessTemplate does not exist."
-          if($PSCmdlet.ShouldProcess($UserAccessTemplate,"Initialize")) {
-            #TODO: Initialize-BIFUserAccessTemplate ?? internal function only?
-          }
+        # if we had specified a new (valid) config file or there was NOT an error loading current config, then allow to set other params
+        if($ConfigFile -or -not $ConfigLoadError) {
+
+            #TODO: Add some validation to characters to that it's not something that can't be in XML
+            if($Version) {
+                $ConfigData.OLLBIF.Environment.Version = $Version
+
+                Write-Debug "Version: $($ConfigData.OLLBIF.Environment.Version)"
+            }
+
+            if($SystemAccessTemplate) {
+                if($(Test-Path -Path $SystemAccessTemplate)) {
+                    $ConfigData.OLLBIF.Environment.SystemAccessTemplate = $SystemAccessTemplate
+                } else {
+                    Write-Warning "$SystemAccessTemplate does not exist."
+                    if($PSCmdlet.ShouldProcess($SystemAccessTemplate,"Initialize")) {
+                        #TODO: Initialize-BIFSystemAccessTemplate ?? internal function only?
+                    }
+                }
+            }
+
+            if($UserAccessTemplate) {
+                if($(Test-Path -Path $UserAccessTemplate)) {
+                    $ConfigData.OLLBIF.Environment.UserAccessTemplate = $UserAccessTemplate
+                } else {
+                    Write-Warning "$UserAccessTemplate does not exist."
+                    if($PSCmdlet.ShouldProcess($UserAccessTemplate,"Initialize")) {
+                        #TODO: Initialize-BIFUserAccessTemplate ?? internal function only?
+                    }
+                }
+            }        
         }
-      }
 
-      if($ConfigFile) {
-        # change
-        $EnvConfigFile = (resolve-path -path $ConfigFile).Path
 
-        # if specified file exist, set it.
-        if($(Test-Path -Path $EnvConfigFile)) {
-          $ConfigData.OLLBIF.Environment.ConfigFile = $ConfigFile
-        } else {
-          #TODO: Initialize-BIFEnvironmentConfig ?? internal function only??
-        }
-      }
     }
 
-    END {
+    END {        
       #Apparently xmldocument.Save(string filename) is not available on .NET core (OSX)
       if($PSEdition -eq "Core") {
         # we use a streamWriter instead.

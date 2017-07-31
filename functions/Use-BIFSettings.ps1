@@ -61,6 +61,9 @@ Function Use-BIFSettings {
             try {
                 $script:EnvironmentConfig = Import-Clixml -Path $ConfigStoragePath -ErrorAction stop
 
+                # store where we loaded base config from.
+                $script:EnvironmentConfigPath = $ConfigStoragePath
+
                 if($script:EnvironmentConfig) {
                     # test access to configuration files
                     $script:EnvironmentConfig.keys  | ForEach-Object {
