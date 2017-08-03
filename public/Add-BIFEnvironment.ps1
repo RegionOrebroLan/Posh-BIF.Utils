@@ -45,6 +45,7 @@ Function Add-BIFEnvironment {
       [string]$Version
 
       ,[Parameter(Mandatory=$False)]
+      [ValidateNoteNullOrEmpty()]
       [string]$Name
     )
 
