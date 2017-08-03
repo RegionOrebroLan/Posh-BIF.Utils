@@ -14,6 +14,7 @@ Initiera konfigurationsfil med inställningar för en testmiljö och produktions
 Ändra x:\BIF\config\ till den sökväg där filerna skall lagras.
 ```powershell
 Initialize-BIFSettings -ConfigReferences @{Test="x:\BIF\config\test.conf"; Prod="x:\BIF\config\prod.conf"}
+Use-BIFSettings
 ```
 
 Lägg till en kund, vårdgivare samt vårdsystem.
