@@ -27,6 +27,11 @@
 
         Läser in konfiguration för miljö Test och skapar powershellkommandon för att skapa upp konfigurationen.
 
+    .EXAMPLE
+        ConvertFrom-BIFConfigToScript -Path x:\config.conf -ApplyEnvironment Prod
+
+        Läser konfiguration från fil x:\config.conf och skapar powershellkommandon för som om det vore miljö Prod.
+
     .NOTES
 
     .LINK
