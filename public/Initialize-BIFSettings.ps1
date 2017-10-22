@@ -18,7 +18,7 @@
 
 	.EXAMPLE
         Initialize-BIFSettings -ConfigReferences @{ Prod = "\\fileserver\share$\BIF\config\production\BIF_production.conf"; Test = "\\fileserver\share$\BIF\config\test\BIF_production.conf";}
-
+		Use-BIFSettings
 	.NOTES
 
 	.LINK
