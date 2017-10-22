@@ -62,7 +62,7 @@ Function Publish-BIFUserAccessData {
         # here strings can't be indented
         $CustomerUserACLDataTemplate = @"
 `t`t`t<!-- %CUSTOMERNAME%: %CAREPROVIDERNAME% -->
-`t`t`t<attribute name="urn:sambi:names:attribute:careProviderHsaId" value="%CAREPROVIDERHSAID%"/>
+`t`t`t<attribute name="urn:sambi:names:attribute:careProviderHsaId" value="%CAREPROVIDERHSAID%"/>`r`n
 "@
 
         foreach($Customer in $ConfigData.OLLBIF.Customers.Customer) {
