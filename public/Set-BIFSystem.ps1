@@ -80,12 +80,10 @@ Function Set-BIFSystem {
             Throw "Could not load configuration from `"$EnvConfigFile`". Make sure the file exists and your account has access to it, or that EnvironmentConfig is defined, is the module loaded properly?"
         }
 
-
-
         $CustomerConf = $ConfigData.OLLBIF.Customers.Customer | ? { $_.name -eq $CustomerName }
 
         if(-Not $CustomerConf) {
-            Throw "Customer `"{0}`" does not exist!" -f $Customer
+            Throw "Customer `"{0}`" does not exist!" -f $CustomerName
         }
 
         if($SystemHSAId) {
@@ -99,7 +97,7 @@ Function Set-BIFSystem {
                 Throw "Can not find a system with name `"{0}`"" -f $SystemName
             }
         }
-    }
+     
 
     PROCESS {
 
