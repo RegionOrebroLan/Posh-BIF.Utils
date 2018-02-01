@@ -60,7 +60,13 @@ Function Set-BIFSystem {
     }
 
     BEGIN {
-        #TODO: Add more functionality, line changing name etc
+        # If -debug is set, change $DebugPreference so that output is a little less annoying.
+        #    http://learn-powershell.net/2014/06/01/prevent-write-debug-from-bugging-you/
+        If ($PSBoundParameters['Debug']) {
+            $DebugPreference = 'Continue'
+        }
+        
+        #TODO: Add more functionality, like changing name etc
 
         if(-Not $script:EnvironmentConfig) {
             Throw "Global Environment config is not set! Is the module properly loaded? use Use-BIFSettings to re-read configuration data."
@@ -82,17 +88,21 @@ Function Set-BIFSystem {
 
         $CustomerConf = $ConfigData.OLLBIF.Customers.Customer | ? { $_.name -eq $CustomerName }
 
+        Write-Debug $($CustomerConf | Out-String)
+        Write-Debug $($CustomerConf.CareProviders.careprovider | Out-String)
+        Write-Debug $($CustomerConf.Systems.system | Out-String)
+        
         if(-Not $CustomerConf) {
             Throw "Customer `"{0}`" does not exist!" -f $CustomerName
         }
 
         if($SystemHSAId) {
-            $sys = $ConfigData.OLLBIF.Customers.customer.systems.system | ? { $_.hsaid -eq $SystemHSAId }
+            $sys = $CustomerConf.Systems.system | ? { $_.hsaid -eq $SystemHSAId }
             if(-Not $sys) {
                 Throw "Can not find a system  with hsaid `"{0}`"" -f $SystemHSAId
             }
         } elseif($SystemName) {
-            $sys = $ConfigData.OLLBIF.Customers.customer.systems.system | ? { $_.name -eq $SystemName }
+            $sys = $CustomerConf.Systems.system | ? { $_.name -eq $SystemName }
             if(-Not $sys) {
                 Throw "Can not find a system with name `"{0}`"" -f $SystemName
             }
@@ -102,9 +112,11 @@ Function Set-BIFSystem {
 
     PROCESS {
 
+        Write-Debug $($sys | Out-String)
+
         if($NewName) {
 
-            $systest = $ConfigData.OLLBIF.Customers.customer.systems.system | ? { $_.name -eq $NewName }
+            $systest = $CustomerConf.Systems.system | ? { $_.name -eq $NewName }
             if($systest) {
                 Throw "System `"{0}`" already exists!" -f $NewName
             }
@@ -114,7 +126,7 @@ Function Set-BIFSystem {
 
 
         if($NewHsaId) {
-            $systest = $ConfigData.OLLBIF.Customers.customer.systems.system | ? { $_.hsaid -eq $SystemHSAId }
+            $systest = $CustomerConf.Systems.system | ? { $_.hsaid -eq $SystemHSAId }
             if($systest) {
                 Throw "A system with hsa-id `"{0}`" already exists!" -f $NewHsaId
             }
