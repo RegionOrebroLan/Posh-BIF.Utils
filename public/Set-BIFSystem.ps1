@@ -97,6 +97,7 @@ Function Set-BIFSystem {
                 Throw "Can not find a system with name `"{0}`"" -f $SystemName
             }
         }
+    }
      
 
     PROCESS {
