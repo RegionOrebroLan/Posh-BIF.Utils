@@ -1,4 +1,4 @@
-<#
+﻿<#
     .SYNOPSIS
         Raderar konfiguration för en miljö
 

@@ -1,4 +1,4 @@
-<#
+﻿<#
     .SYNOPSIS
         Ändrar inställningar för en viss miljö
 
