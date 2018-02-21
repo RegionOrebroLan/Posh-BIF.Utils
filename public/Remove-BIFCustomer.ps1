@@ -3,12 +3,13 @@
         Tar bort en kund för en viss miljö.
 
     .DESCRIPTION
-    Tar bort en kund för en viss miljö.
+        Tar bort en kund för en viss miljö.
 
     .PARAMETER CustomerName
-        Anger namnet på kunden som skall plockas bort.
+        Anger namnet på kunden som skall plockas bort. Om inte parameter CustomerName anges måste parameter ShortName anges.
 
     .PARAMETER Shortname
+        Anger kortnamnet på kunden som skall plockas bort. Om inte ShortName anges måste parameter CustomerName anges.
 
     .PARAMETER Environment
         Anger för vilken miljö kunden skall tas bort från.

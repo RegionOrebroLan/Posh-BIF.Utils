@@ -5,11 +5,13 @@
     .DESCRIPTION
         
     .PARAMETER Environment
+        Anger vilken miljö vars konfiguration skall testas.
 
     .PARAMETER EnvironmentConfigFile
+        Om parametern anges används konfigurationen i sökvägen som spec'as. Annars används konfigurationsfilen som miljön som anges i parameter Environment använder.
 
     .EXAMPLE
-        Test-BIFSettings
+        Test-BIFSettings -Environment Prod
 
     .NOTES
         

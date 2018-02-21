@@ -16,6 +16,10 @@
         Anger den driftmiljö som konfigurationen skall hämtas för.
 
     .EXAMPLE
+        Get-BIFSystem -CustomerName "Customer 1" -Environment Prod
+
+    .EXAMPLE
+        Get-bifCustomer -Environment prod | ForEach-Object { Get-BIFSystem -CustomerName $_.name -Environment Prod }
 
     .NOTES
 

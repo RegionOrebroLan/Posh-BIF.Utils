@@ -3,6 +3,8 @@
         Konverterar en konfigurationsfil till ett powershellscript.
 
     .DESCRIPTION
+        Konverterar en konfigurationsfil till ett powershellscript med kommandon från modulen.
+        Kan användas för att skapa upp en ny miljökonfiguratio från en annan konfigurationsfil.
 
     .PARAMETER Environment
         Läser konfigurationen från angiven miljö.

@@ -3,7 +3,7 @@
         Hämtar konfigurationsinformation om registrerade miljöer.
 
     .DESCRIPTION
-    Hämtar konfigurationsinformation om registrerade miljöer.
+        Hämtar konfigurationsinformation om registrerade miljöer.
 
     .PARAMETER Environment
         Anger vilken miljö konfiguration skall visas för.

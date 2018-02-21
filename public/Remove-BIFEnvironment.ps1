@@ -3,12 +3,13 @@
         Raderar konfiguration för en miljö
 
     .DESCRIPTION
+        Raderar konfiguration för en miljö
 
     .PARAMETER Environment
-      Anger namn på den miljö som skall raderas
+        Anger namn på den miljö som skall raderas
 
     .EXAMPLE
-        Remove-BIFEnvironment
+        Remove-BIFEnvironment -Environment Prod
 
     .NOTES
 

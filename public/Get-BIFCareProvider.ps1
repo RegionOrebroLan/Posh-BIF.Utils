@@ -1,16 +1,18 @@
 <#
     .SYNOPSIS
+        Listar alla vårdgivare för en viss miljö.
 
     .DESCRIPTION
+        Listar alla vårdgivare för en viss miljö.
 
     .PARAMETER Environment
-
-    .PARAMETER CareProividerName
+        Miljön som vårdgivare skall listas för
 
     .PARAMETER CustomerName
+        Om parameter CustomerName anges så listas vårdgivare specifikt för en kund.
 
     .EXAMPLE
-        Get-BIFCareprovider
+        Get-BIFCareprovider -Environment Prod
 
     .NOTES
 

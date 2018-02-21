@@ -3,7 +3,7 @@
         Tar bort till en vårdgivare för en viss kund.
 
     .DESCRIPTION
-    Tar bort till en vårdgivare för en viss kund.
+        Tar bort till en vårdgivare för en viss kund.
 
     .PARAMETER CustomerName
         Anger för vilken kund vårdgivaren skall tas bort.

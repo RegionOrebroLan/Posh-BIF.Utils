@@ -3,6 +3,7 @@
         Läser in konfigurationsdata.
 
 	.DESCRIPTION
+        Läser in konfigurationsdata.
 
     .PARAMETER Path
         Anger en sökväg till konfigurationsfilen

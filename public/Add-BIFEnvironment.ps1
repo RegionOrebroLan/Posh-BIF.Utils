@@ -3,6 +3,7 @@
         Lägger till en miljö.
 
     .DESCRIPTION
+        Lägger till en miljö.
 
     .PARAMETER Name
       Anger namn på miljön.
