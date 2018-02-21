@@ -1,4 +1,4 @@
-<#
+﻿<#
     .SYNOPSIS
         Lägger till en miljö.
 

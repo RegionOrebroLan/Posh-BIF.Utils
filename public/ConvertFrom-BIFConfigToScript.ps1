@@ -1,4 +1,4 @@
-<#
+﻿<#
     .SYNOPSIS
         Konverterar en konfigurationsfil till ett powershellscript.
 

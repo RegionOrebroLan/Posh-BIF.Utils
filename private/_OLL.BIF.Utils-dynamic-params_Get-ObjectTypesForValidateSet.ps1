@@ -1,4 +1,4 @@
-<#
+ï»¿<#
     .SYNOPSIS
 
     .DESCRIPTION
@@ -21,8 +21,8 @@ Function _OLL.BIF.Utils-dynamic-params_Get-EnvironmentShortNames {
 
     PROCESS {
         # Vi skapar en array av object av typen [DynParamQuotedString]
-        # Detta för att hantera strängar som kan innehålla space.
-        # Den sträng som sedan väljs kommer plockas upp via property'n OriginalString från objektet.
+        # Detta fÃ¶r att hantera strÃ¤ngar som kan innehÃ¥lla space.
+        # Den strÃ¤ng som sedan vÃ¤ljs kommer plockas upp via property'n OriginalString frÃ¥n objektet.
         $QuotedStringObjects = ${script:EnvironmentConfig}.Keys | ForEach-Object { [DynParamQuotedString] $_.ToString() }
 		
         return $QuotedStringObjects
