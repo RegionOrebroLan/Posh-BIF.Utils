@@ -1,21 +1,10 @@
-Ôªø<#
-	.SYNOPSIS        
+[cmdletBinding()]
+Param(
+)
 
-	.DESCRIPTION        
-
-    .PARAMETER         
-
-	.EXAMPLE        
-
-	.NOTES
-
-	.LINK
-
-#>
 Function Update-BIFModuleManifest {
     [cmdletBinding()]
     Param(
-        
     )
 
     BEGIN {
@@ -26,12 +15,11 @@ Function Update-BIFModuleManifest {
 		}
 
 
-
         $ManifestParams = @{
             Path = ''
 
             # Script module or binary module file associated with this manifest.
-            RootModule = 'OLL.BIF.Utils.psm1'
+            RootModule = 'Posh-BIF.Utils.psm1'
 
             # Version number of this module.
             # NuGet does not like just 1.0, seems to need 1.0.0
@@ -45,16 +33,16 @@ Function Update-BIFModuleManifest {
             GUID = '8cc6b310-5aaa-4b79-b66a-1282b4b1af34'
 
             # Author of this module
-            Author = 'Andreas √ñstlund'
+            Author = 'Andreas ÷stlund'
 
             # Company or vendor of this module
-            CompanyName = 'Region √ñrebro l√§n'
+            CompanyName = 'Region ÷rebro l‰n'
 
             # Copyright statement for this module
             Copyright = ' '
 
             # Description of the functionality provided by this module
-            Description = 'En powershellmodul f√∂r att hantera konfiguration till Ineras Lokala S√§kerhetstj√§nster.'
+            Description = 'En powershellmodul fˆr att hantera konfiguration till Ineras Lokala S√§kerhetstj‰nster.'
 
             # Minimum version of the Windows PowerShell engine required by this module
             # PowerShellVersion = ''
@@ -130,17 +118,23 @@ Function Update-BIFModuleManifest {
             $ModuleRoot = Split-Path -path ${PSScriptRoot} -Parent
         }
 
+        Write-Debug "Path: $ModuleRoot"
+
         # Do some sanity testing
-        $FunctionsDir = get-item -Path (join-path -Path $ModuleRoot -ChildPath "functions")
+        $FunctionsDir = get-item -Path (join-path -Path $ModuleRoot -ChildPath "public")
         if( (-Not $FunctionsDir) -or (-Not $FunctionsDir.PSIsContainer) ) {
             Throw "Weops! Our assumed module directory $ModuleRoot does not seem to be correct!"
         }
 
 
-        $ManifestParams.Path = $(Join-Path -Path $ModuleRoot -ChildPath "OLL.BIF.Utils.psd1" )
+        $ManifestParams.Path = $(Join-Path -Path $ModuleRoot -ChildPath "Posh-BIF.Utils.psd1" )
 
         # There is probably a better way to do this...
-        $Functions = get-childitem "${ModuleRoot}\functions\*.ps1" | ? { $_.Name -like '*-BIF*.ps1'} | ForEach-Object { $_.Name.Replace(".ps1","") }
+        # concat path with join-path to support OSX
+        $FunctionPath = Join-Path -Path ${ModuleRoot} -ChildPath "public"
+        Write-Verbose "Reading public functions from $FunctionPath"
+        $Functions = Get-ChildItem -Path $FunctionPath -Filter "*.ps1" | ? { $_.Name -like '*-BIF*.ps1'} | ForEach-Object { $_.Name.Replace(".ps1","") }
+
 
         $ManifestParams.FunctionsToExport = $Functions
 
@@ -161,4 +155,3 @@ Function Update-BIFModuleManifest {
 
 
 Update-BIFModuleManifest
-

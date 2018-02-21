@@ -1,18 +1,18 @@
 ﻿<#
-	.SYNOPSIS        
+	.SYNOPSIS
         Läser in konfigurationsdata.
 
-	.DESCRIPTION        
+	.DESCRIPTION
 
     .PARAMETER Path
         Anger en sökväg till konfigurationsfilen
 
-	.EXAMPLE        
+	.EXAMPLE
         Use-BIFSettings
 
         Läser in konfigurationsdata från standardsökvägen
 
-	.EXAMPLE        
+	.EXAMPLE
         Use-BIFSettings -Path \\fileserver\share$\BIF\
 
         Läser in konfigurationsdata från konfigurationsfil lagrad i \\fileserver\share$\BIF\
@@ -38,25 +38,31 @@ Function Use-BIFSettings {
 		}
 
         # This whole thing needs looking at...
-        
+
 
         $ModuleRoot = Split-Path -Path ${PSScriptRoot} -Parent
+
+        Write-Debug "ModuleRoot: $ModuleRoot"
 
         if(-not $Path) {
             # if $Path are unspecified, assume we shall go look for the config in module directory
             #$ConfigStoragePath = Split-Path $PSCmdlet.MyInvocation.PSScriptRoot -Parent
-            $ConfigStoragePath = Join-Path -Path $ModuleRoot -ChildPath 'OLL.BIF.Utils.conf'
+            $ConfigStoragePath = Join-Path -Path $ModuleRoot -ChildPath 'Posh-BIF.Utils.conf'
         } else {
-            
+
         }
 
+        Write-Debug "ConfigStoragePath: $ConfigStoragePath"
 
         if($(Test-Path -Path $ConfigStoragePath)) {
-            
+
             Write-Verbose "Reading config data from $ConfigStoragePath"
 
             try {
                 $script:EnvironmentConfig = Import-Clixml -Path $ConfigStoragePath -ErrorAction stop
+
+                # store where we loaded base config from.
+                $script:EnvironmentConfigPath = $ConfigStoragePath
 
                 if($script:EnvironmentConfig) {
                     # test access to configuration files
@@ -69,12 +75,12 @@ Function Use-BIFSettings {
                             Write-Warning ("Could not find configuration file `"{0}`". Check that the file exist and you have access rights to it." -f $conf)
                         } else {
                             # http://stackoverflow.com/questions/22943289/powershell-what-is-the-best-way-to-check-whether-the-current-user-has-permissio
-                            try { 
+                            try {
                                 [io.file]::OpenWrite($conf).close()
                             }
-                            Catch { 
+                            Catch {
                                 Write-Warning "You don't seem to have write access to configuration file `"$conf`". Check that the file exist and you have access rights to it."
-                            }    
+                            }
                         }
                     }
                 }
@@ -83,7 +89,7 @@ Function Use-BIFSettings {
                 Write-Warning ("Unable to load base configuration from $ConfigStoragePath`r`n{0}" -f $($_.Exception.Message))
             }
         } else {
-            Write-Warning "Can't find base config! Use Initialize-BIFSettings to create a base config and then use Use-BIFSettings to load the settings or reload the module."        
+            Write-Warning "Can't find base config! Use Initialize-BIFSettings to create a base config and then use Use-BIFSettings to load the settings or reload the module."
         }
     }
 

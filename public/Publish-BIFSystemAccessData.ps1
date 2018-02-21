@@ -50,7 +50,7 @@ Function Publish-BIFSystemAccessData {
         $RuntimeParameterDictionary = _New-DynamicValidateSetParam -ParameterName "Environment" `
                                                                    -ParameterType [DynParamQuotedString] `
                                                                    -Mandatory $True `
-                                                                   -FillValuesWith "_OLL.BIF.Utils-dynamic-params_Get-EnvironmentShortNames" 
+                                                                   -FillValuesWith "_OLL.BIF.Utils-dynamic-params_Get-EnvironmentShortNames"
 
         return $RuntimeParameterDictionary
     }
@@ -61,9 +61,13 @@ Function Publish-BIFSystemAccessData {
         }
 
         $Environment = $PSBoundParameters["Environment"].OriginalString
-        
+
         try {
             $EnvConfigFile = $script:EnvironmentConfig[$Environment]
+            # use resolve-path to get the full path of file.
+            # on .NET core there seems to be problem with saving to a relative path
+            $EnvConfigFile = (Resolve-Path -Path $EnvConfigFile).Path
+
             [xml]$ConfigData = Get-Content $EnvConfigFile -ErrorAction Stop
         }
         catch {
@@ -74,7 +78,7 @@ Function Publish-BIFSystemAccessData {
         # Parameter sanity checks
         if(-Not $CustomerName -and  $SystemName) {
             Throw "If SystemName is specified CustomerName must also be specified."
-        }    
+        }
 
         if($CustomerName -and -Not $(Test-BIFCustomer -CustomerName $CustomerName -Environment $Environment) ) {
             Throw "Customer $CustomerName does not exists"
@@ -88,10 +92,10 @@ Function Publish-BIFSystemAccessData {
         $TS = (Get-date).ToSTring('yyyyMMdd-HHmmss')
 
         # create a directory to store the files, and a backup directory
-        $OutputDirectory = "$(split-path -path $script:EnvironmentConfig[$Environment])\SystemRules"
+        $OutputDirectory = join-path -path $(split-path -path $script:EnvironmentConfig[$Environment]) -ChildPath "SystemRules"
         _New-DirectoryWithTest -Name $OutputDirectory
 
-        $BackupDirectory = "$OutputDirectory\Backup"
+        $BackupDirectory = Join-Path -Path $OutputDirectory -ChildPath "Backup"
         _New-DirectoryWithTest -Name $BackupDirectory
 
 
@@ -122,11 +126,11 @@ Function Publish-BIFSystemAccessData {
             If($SystemName) {
                 $SystemSelection = $Customer.Systems.System | ? { $_.Name -eq $SystemName }
             } else {
-                $SystemSelection = $Customer.Systems.System 
+                $SystemSelection = $Customer.Systems.System
             }
 
             # loop all systems in selection
-            foreach($System in $SystemSelection) {   
+            foreach($System in $SystemSelection) {
 
                 Write-Progress -Activity $Customer.name -CurrentOperation $System.name
 
@@ -136,13 +140,13 @@ Function Publish-BIFSystemAccessData {
 
                 # loop all care givers
                 foreach($Careprovider in $Customer.Careproviders.Careprovider) {
-            
+
                     # add an access rule to the $systemdata string
                     $SystemData += $SystemAccessEntryTemplate | _Expand-VariablesInString -VariableMappings @{ CAREPROVIDERNAME = $Careprovider.name; CAREPROVIDERHSAID = $Careprovider.hsaid }
                     $SystemData += "`r`n"
                 }
 
-       
+
                 # If there's any care givers specific for the current system, then loop those
                 foreach($Careprovider in $System.Careproviders.Careprovider) {
 
@@ -150,14 +154,15 @@ Function Publish-BIFSystemAccessData {
                     $SystemData += $SystemAccessEntryTemplate | _Expand-VariablesInString -VariableMappings @{ CAREPROVIDERNAME = $Careprovider.name; CAREPROVIDERHSAID = $Careprovider.hsaid }
                     $SystemData += "`r`n"
                 }
-        
+
 
                 # A replace is made of all "dangerous" characters so that the shortname can't traverse paths
-                $OutputFileName = "$($OutputDirectory)\regler_$($Customer.shortname -replace "[/.\\:]","-")_vårdsystem_$($System.Name)_$($system.hsaid).xml"
+                $OutputFileName = Join-Path -Path $OutputDirectory -ChildPath "regler_$($Customer.shortname -replace "[/.\\:]","-")_vårdsystem_$($System.Name)_$($system.hsaid).xml"
 
                 if( $(Test-Path $OutputFileName) ) {
                     Write-Warning "$OutputFileName already exists. Backing up to $BackupDirectory"
-                    Move-Item $OutputFileName "$BackupDirectory\$(split-path -path $OutputFileName -Leaf)_$TS" -Verbose:$False
+                    $BackupFileName = "$(split-path -path $OutputFileName -Leaf)_$TS"
+                    Move-Item -Path $OutputFileName -Destination $(Join-Path -Path $BackupDirectory -ChildPath $BackupFileName ) -Verbose:$False
                 }
 
 
@@ -166,7 +171,7 @@ Function Publish-BIFSystemAccessData {
                         Out-File -FilePath $OutputFileName -Encoding utf8
 
                 Write-Verbose "File written to $OutputFileName"
-   
+
             }
         }
     }

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="OLLBIF">
+    <xs:complexType>
+      <xs:all maxOccurs="1" minOccurs="1">
+        <xs:element name="Environment">
+          <xs:complexType>
+            <xs:all minOccurs="1" maxOccurs="1">
+              <xs:element name="Name" type="xs:string" />
+              <xs:element name="Version" type="xs:string" />
+              <xs:element name="UserAccessTemplate" type="xs:string" />
+              <xs:element name="SystemAccessTemplate" type="xs:string" />
+            </xs:all>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Customers">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element minOccurs="0" maxOccurs="unbounded" name="Customer">
+                <xs:complexType>
+                  <xs:all>
+                    <xs:element minOccurs="0" maxOccurs="1" name="Careproviders">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element minOccurs="0" maxOccurs="unbounded" name="CareProvider">
+                            <xs:complexType>
+                              <xs:attribute name="name" type="xs:string" use="required" />
+                              <xs:attribute name="hsaid" type="xs:string" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element minOccurs="0" maxOccurs="unbounded" name="Careprovider">
+                            <xs:complexType>
+                              <xs:attribute name="name" type="xs:string" use="required" />
+                              <xs:attribute name="hsaid" type="xs:string" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element minOccurs="0" maxOccurs="1" name="Systems">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element minOccurs="0" maxOccurs="unbounded" name="System">
+                            <xs:complexType>
+                              <xs:sequence minOccurs="0">
+                                <xs:element name="Careproviders">
+                                  <xs:complexType>
+                                    <xs:sequence>
+                                      <xs:element minOccurs="0" maxOccurs="unbounded" name="Careprovider">
+                                        <xs:complexType>
+                                          <xs:attribute name="name" type="xs:string" use="required" />
+                                          <xs:attribute name="hsaid" type="xs:string" use="required" />
+                                        </xs:complexType>
+                                      </xs:element>
+                                    </xs:sequence>
+                                    <xs:attribute name="ExcludeFromUserACL" type="xs:unsignedByte" use="optional" />
+                                  </xs:complexType>
+                                </xs:element>
+                              </xs:sequence>
+                              <xs:attribute name="name" type="xs:string" use="required" />
+                              <xs:attribute name="hsaid" type="xs:string" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:all>
+                  <xs:attribute name="name" type="xs:string" use="required" />
+                  <xs:attribute name="shortname" type="xs:string" use="required" />
+                  <xs:attribute name="ExcludeFromUserACL" type="xs:unsignedByte" use="optional" />
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:all>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

@@ -1,34 +1,34 @@
 ﻿<#
     .SYNOPSIS
-        Kontrollerar om ett visst system finns registerat för en viss kund.
+        Hämtar information om ett registrerat system som är kopplat till säkerhetstjänsterna.
 
     .DESCRIPTION
-        Kontrollerar om ett visst system finns registerat för en viss kund.
+        Hämtar information om ett registrerat system som är kopplat till säkerhetstjänsterna.
+        För att få upp vilka kunder som finns registrerade, använd cmdlet Get-BIFCustomer.
 
     .PARAMETER CustomerName
-        Anger vilken kund informationen skall hämtas för.
+        Anger för vilken kund systemet tillhör.
 
     .PARAMETER SystemName
-        Anger vilket system informationen skall hämtas för.
+        Anger namn på systemet.
 
     .PARAMETER Environment
         Anger den driftmiljö som konfigurationen skall hämtas för.
 
     .EXAMPLE
-        Test-BIFSystem -CustomerName "Region Örebro län" -SystemName "Kibi" -Environment Prod
 
     .NOTES
 
     .LINK
 
 #>
-Function Test-BIFSystem {
+Function Get-BIFSystem {
     [cmdletBinding()]
     Param(
         [Parameter(Mandatory=$True)]
         [string]$CustomerName
 
-        ,[Parameter(Mandatory=$True)]
+        ,[Parameter(Mandatory=$False)]
         [string]$SystemName
 
         <#
@@ -41,7 +41,7 @@ Function Test-BIFSystem {
         $RuntimeParameterDictionary = _New-DynamicValidateSetParam -ParameterName "Environment" `
                                                                    -ParameterType [DynParamQuotedString] `
                                                                    -Mandatory $True `
-                                                                   -FillValuesWith "_OLL.BIF.Utils-dynamic-params_Get-EnvironmentShortNames" 
+                                                                   -FillValuesWith "_OLL.BIF.Utils-dynamic-params_Get-EnvironmentShortNames"
 
         return $RuntimeParameterDictionary
     }
@@ -52,9 +52,13 @@ Function Test-BIFSystem {
         }
 
         $Environment = $PSBoundParameters["Environment"].OriginalString
-        
+
         try {
             $EnvConfigFile = $script:EnvironmentConfig[$Environment]
+            # use resolve-path to get the full path of file.
+            # on .NET core there seems to be problem with saving to a relative path
+            $EnvConfigFile = (Resolve-Path -Path $EnvConfigFile).Path
+
             [xml]$ConfigData = Get-Content $EnvConfigFile -ErrorAction Stop
         }
         catch {
@@ -63,12 +67,14 @@ Function Test-BIFSystem {
     }
 
     PROCESS {
-        $System = $ConfigData.OLLBIF.Customers.customer | ? { $_.Name -eq $CustomerName } | select -ExpandProperty Systems | select -ExpandProperty system | ? { $_.Name -eq $SystemName }
-
-        if( $system ) {
-            return $True
+        if(-Not $SystemName) {
+            $ConfigData.OLLBIF.Customers.customer | ? { $_.Name -eq $CustomerName } | `
+                select -ExpandProperty Systems | `
+                select -ExpandProperty system
         } else {
-            return $False
+            $ConfigData.OLLBIF.Customers.customer | ? { $_.Name -eq $CustomerName } | `
+                select -ExpandProperty Systems | `
+                select -ExpandProperty system | ? { $_.Name -eq $SystemName }
         }
     }
 

@@ -35,13 +35,13 @@ Function Remove-BIFSystem {
         ,[Parameter(Mandatory=$True)]
         [ValidateSet('Prod','Test','QA')]
         [string]$Environment
-        #>        
+        #>
     )
     DynamicParam {
         $RuntimeParameterDictionary = _New-DynamicValidateSetParam -ParameterName "Environment" `
                                                                    -ParameterType [DynParamQuotedString] `
                                                                    -Mandatory $True `
-                                                                   -FillValuesWith "_OLL.BIF.Utils-dynamic-params_Get-EnvironmentShortNames" 
+                                                                   -FillValuesWith "_OLL.BIF.Utils-dynamic-params_Get-EnvironmentShortNames"
 
         return $RuntimeParameterDictionary
     }
@@ -60,9 +60,13 @@ Function Remove-BIFSystem {
         if(-Not $script:EnvironmentConfig) {
             Throw "Global Environment config is not set! Is the module properly loaded?"
         }
-        
+
         try {
             $EnvConfigFile = $script:EnvironmentConfig[$Environment]
+            # use resolve-path to get the full path of file.
+            # on .NET core there seems to be problem with saving to a relative path
+            $EnvConfigFile = (Resolve-Path -Path $EnvConfigFile).Path
+
             [xml]$ConfigData = Get-Content $EnvConfigFile -ErrorAction Stop
         }
         catch {
@@ -104,14 +108,24 @@ Function Remove-BIFSystem {
 
         if($PSCmdlet.ShouldProcess("$SystemName","Remove")) {
             $ParentNode.RemoveChild($node) | Out-Null
-            $DataModified = $True  
-        } 
+            $DataModified = $True
+        }
     }
 
     END {
         if($DataModified) {
             if($EnvConfigFile) {
-                $Configdata.save($EnvConfigFile)
+
+                #TODO: confirmation
+
+                #Apparently xmldocument.Save(string filename) is not available on .NET core (OSX)
+                if($PSEdition -eq "Core") {
+                  # we use a streamWriter instead.
+                  # this approach is probably available on full .NET as well
+                  $Configdata.Save([System.IO.StreamWriter]::new($EnvConfigFile))
+                } else {
+                  $Configdata.save($EnvConfigFile)
+                }
 
                 Write-Warning "Any generated configuration files for `"$SystemName`" must be removed manually!"
 
