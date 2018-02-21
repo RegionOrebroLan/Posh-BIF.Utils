@@ -16,7 +16,14 @@
         Anger den driftmiljö som konfigurationen skall hämtas för.
 
     .EXAMPLE
+        Get-BIFSystem -Environment Prod
+
+        Listar alla kunder och system för miljön Prod.
+        
+    .EXAMPLE
         Get-BIFSystem -CustomerName "Customer 1" -Environment Prod
+
+        Listar alla system för kund "Customer 1" för miljön Prod.
 
     .EXAMPLE
         Get-bifCustomer -Environment prod | ForEach-Object { Get-BIFSystem -CustomerName $_.name -Environment Prod }
@@ -29,7 +36,7 @@
 Function Get-BIFSystem {
     [cmdletBinding()]
     Param(
-        [Parameter(Mandatory=$True)]
+        [Parameter(Mandatory=$False)]
         [string]$CustomerName
 
         ,[Parameter(Mandatory=$False)]
@@ -71,14 +78,28 @@ Function Get-BIFSystem {
     }
 
     PROCESS {
-        if(-Not $SystemName) {
-            $ConfigData.OLLBIF.Customers.customer | ? { $_.Name -eq $CustomerName } | `
-                select -ExpandProperty Systems | `
-                select -ExpandProperty system
+
+        if(-Not $CustomerName) {
+
+            $ConfigData.OLLBIF.Customers.customer | ForEach-Object {
+                $CustomerName = $_.Name
+                $_.Systems.system | ForEach-Object { 
+                    New-Object -TypeName PSObject -Property @{CustomerName=$CustomerName; SystemName=$_.Name; SystemHSAId=$_.hsaid } 
+                } 
+            }
+
         } else {
-            $ConfigData.OLLBIF.Customers.customer | ? { $_.Name -eq $CustomerName } | `
-                select -ExpandProperty Systems | `
-                select -ExpandProperty system | ? { $_.Name -eq $SystemName }
+
+            if(-Not $SystemName) {
+                $ConfigData.OLLBIF.Customers.customer | ? { $_.Name -eq $CustomerName } | `
+                    select -ExpandProperty Systems | `
+                    select -ExpandProperty system 
+            } else {
+                $ConfigData.OLLBIF.Customers.customer | ? { $_.Name -eq $CustomerName } | `
+                    select -ExpandProperty Systems | `
+                    select -ExpandProperty system | ? { $_.Name -eq $SystemName }
+            }
+    
         }
     }
 
